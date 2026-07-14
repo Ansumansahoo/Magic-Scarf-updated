@@ -6497,7 +6497,30 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 .hero-full__pin-cta:hover { background: #fff; color: var(--c-primary); }
 
 /* ============ END ROUND 4 POLISH ============ */
-/* ============ END CSS ============ */
+/* =========================================================================
+      HEADER FIX — mobile actions cluster (Shop on Faire + login/cart/menu
+      icons) was overflowing off the right edge of the screen on small
+      viewports. Root cause: a later unified ".btn" rule shares the same
+      specificity as ".btn-buy-now" and overrode its responsive padding/
+      font-size, so the button never shrank on mobile. This block wins the
+      cascade (placed last + !important) and hides the text button below
+      480px since the same action already lives in the mobile drawer footer.
+      ========================================================================= */
+   @media (max-width: 760px) {
+        .btn-buy-now {
+               padding: 6px 14px !important;
+               font-size: 12px !important;
+               min-height: 36px !important;
+        }
+        .header-as-actions { gap: 4px !important; }
+   }
+   @media (max-width: 480px) {
+        .btn-buy-now { display: none !important; }
+   }
+   .header-as-row { overflow: visible; }
+   .header-as-actions { flex-wrap: nowrap; min-width: 0; }
+   
+   /* ============ END CSS ============ */
 </style>
 </head>
 <body>
