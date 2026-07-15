@@ -997,9 +997,9 @@ p { margin: 0; }
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: flex-end;          /* bottom-anchored cluster, never over a face */
+  align-items: center;              /* editorial hero: vertically center the copy+CTA block */
   justify-content: flex-start;
-  padding-bottom: clamp(96px, 14vh, 168px);  /* clear of the dots + caption pill */
+  padding-bottom: 0;
   z-index: 3;
   pointer-events: none;
   transition: justify-content .6s var(--ease-out);
@@ -1038,6 +1038,83 @@ p { margin: 0; }
 .hero-full__copy--cta-only h1,
 .hero-full__copy--cta-only .hero-edit-lead { display: none; }
 .hero-full__copy--cta-only { max-width: none; width: auto; }
+
+/* Editorial hero: per-slide title + optional subtitle + bullet list, LEFT-aligned overlay
+   sitting DIRECTLY above the two persistent CTAs — bound together as one cohesive block. */
+.hero-full__copy--editorial {
+  max-width: 520px;
+  width: auto;
+  color: var(--c-ink);
+  text-align: left;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;                          /* tight gap keeps text panel + CTAs visually paired */
+}
+.hero-full__copy--editorial::before { display: none; }
+.hero-edit {
+  display: flex; flex-direction: column;
+  gap: 10px;
+  margin-bottom: 0;                   /* no bleed — parent gap handles spacing to the CTAs */
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  animation: fadeUp .6s var(--ease-out, ease) both;
+}
+.hero-edit__title {
+  font-family: var(--f-serif, 'Fraunces', serif);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  margin: 0;
+  color: var(--c-ink);
+}
+.hero-edit__subtitle {
+  margin: 0;
+  font-family: var(--f-serif, 'Fraunces', serif);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--c-primary);
+  line-height: 1.2;
+}
+.hero-edit__bullets {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex; flex-direction: column;
+  gap: 4px;
+}
+.hero-edit__bullets li {
+  position: relative;
+  padding-left: 18px;
+  font-family: var(--f-body, 'Inter', sans-serif);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--c-ink-mute, #333);
+}
+.hero-edit__bullets li::before {
+  content: '';
+  position: absolute; left: 0; top: 0.55em;
+  width: 6px; height: 6px;
+  background: var(--c-accent, #A8895A);
+  border-radius: 50%;
+}
+/* On very narrow viewports, the editorial block gets a tighter treatment and can even overlap
+   the image safely since the shade will still darken enough for the text. */
+@media (max-width: 760px) {
+  .hero-full__copy--editorial { max-width: none; width: 100%; }
+  .hero-edit { padding: 0; gap: 8px; }
+  .hero-edit__title { font-size: 20px; }
+  .hero-edit__subtitle { font-size: 15px; }
+  .hero-edit__bullets li { font-size: 12.5px; }
+}
 /* Subtle gold accent rule (legacy — kept for any non-CTA-only hero variant) */
 .hero-full__copy::before {
   content: '';
@@ -1633,7 +1710,7 @@ p { margin: 0; }
   background: radial-gradient(ellipse 800px 400px at 50% 0%, rgba(255,254,251,.6), transparent);
   pointer-events: none;
 }
-.section-head { text-align: center; margin-bottom: var(--s-7); position: relative; }   /* 32px from 48px */
+.section-head { text-align: center; margin-bottom: var(--s-6); position: relative; }   /* 24px — tightened per client rev */
 .section-head .eyebrow { display: inline-flex; margin-bottom: var(--s-3); }
 .section-head h2 { margin-bottom: var(--s-3); font-size: var(--fs-3xl); letter-spacing: -.02em; }
 /* Strip the decorative ::before underscore on section-head eyebrows — keep only on hero-level */
@@ -4646,7 +4723,7 @@ p { margin: 0; }
 .pill.processing { background: rgba(200,148,92,.16); color: var(--c-accent-d); }
 
 /* ===== Contact ===== */
-.contact { padding: 60px 0; }
+.contact { padding: 40px 0; }
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
 @media (max-width: 1100px) { .contact-grid { grid-template-columns: 1fr; } }
 .contact-info { background: var(--c-surface); border-radius: var(--r-lg); padding: 32px; }
@@ -5116,11 +5193,12 @@ h1 em, h2 em { font-style: italic; color: var(--c-ink); font-weight: 400; }
 .btn-gold:hover { background: var(--c-primary); border-color: var(--c-primary); }
 .btn-sm { min-height: 40px; padding: 0 18px; font-size: 14px; }
 
-/* Section rhythm — tighter, more modern editorial pace */
-.section { padding: 80px 0; }
-.section-tight { padding: 56px 0; }
+/* Section rhythm — client rev: tightened to reduce total home-page scroll length */
+.section { padding: 44px 0; }
+.section-tight { padding: 28px 0; }
 .section-cream { background: var(--c-surface); }
-@media (max-width: 760px) { .section { padding: 56px 0; } .section-tight { padding: 36px 0; } }
+@media (max-width: 1100px) { .section { padding: 36px 0; } .section-tight { padding: 24px 0; } }
+@media (max-width: 760px)  { .section { padding: 28px 0; } .section-tight { padding: 20px 0; } }
 
 /* Container — modern width, more breathing room */
 .container { max-width: var(--w-page); padding: 0 32px; }
@@ -5175,6 +5253,27 @@ h1 em, h2 em { font-style: italic; color: var(--c-ink); font-weight: 400; }
 .catalog-tile-img::before, .cat-tile-img::before { display: none; }
 .catalog-tile-img img, .cat-tile-img img { transition: transform .8s ease; }
 .catalog-tile:hover .catalog-tile-img img, .cat-tile:hover .cat-tile-img img { transform: scale(1.04); }
+
+/* Client rev: category / collection tile images are composed as full-frame designs — show them
+   uncropped. Switch from object-fit: cover → contain, and remove the aspect ratio so the tile
+   sizes to the image proportions. Applied to BOTH the Signature Collections rail and the
+   Full Catalog home rail. */
+.seasonal-picks .cat-tile-img,
+#seasonalRail    .cat-tile-img {
+  aspect-ratio: auto;
+  background: #fdfaf3;                                /* soft cream backdrop matches the tile artwork */
+}
+.seasonal-picks .cat-tile-img img,
+#seasonalRail    .cat-tile-img img {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain !important;
+  display: block;
+}
+/* Turn off the hover scale for uncropped tiles so nothing spills over the border-radius */
+.seasonal-picks .cat-tile:hover .cat-tile-img img,
+#seasonalRail    .cat-tile:hover .cat-tile-img img { transform: none !important; }
 /* Labels HIDDEN per client rev — image cards speak for themselves */
 .catalog-tile-body { display: none; }
 .cat-tile-name { display: none; }
@@ -5489,10 +5588,17 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
    ========================================================================= */
 
 /* Signature Items grid — 8 boxes at desktop, cleanly scaled at every breakpoint */
+/* Client rev: Signature Collections rail is one row of 4 collection tiles (Best Picks, Discount Items, New Arrivals, Coming Soon) */
 .seasonal-picks .cat-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 20px; }
 @media (min-width: 1300px) { .seasonal-picks .cat-rail { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 1100px) { .seasonal-picks .cat-rail { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 1100px) { .seasonal-picks .cat-rail { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 760px)  { .seasonal-picks .cat-rail { grid-template-columns: repeat(2, 1fr); gap: 16px 12px; } }
+
+/* Home Full Catalog rail — 5 tiles per row, wraps to as many rows as needed (110 categories total) */
+#seasonalRail.cat-rail { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px 20px; }
+@media (max-width: 1300px) { #seasonalRail.cat-rail { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 1100px) { #seasonalRail.cat-rail { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px)  { #seasonalRail.cat-rail { grid-template-columns: repeat(2, 1fr); gap: 16px 12px; } }
 
 /* =========================================================================
    FAIRE SECTION v3 — Client rev: light two-column layout (copy left, list right).
@@ -5502,7 +5608,7 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
   background: var(--c-surface);
   border-top: 1px solid var(--c-line);
   border-bottom: 1px solid var(--c-line);
-  padding: 96px 0;
+  padding: 44px 0;                             /* client rev: was 96px — tightened to match section rhythm */
 }
 .faire-section__grid {
   display: grid;
@@ -5513,8 +5619,8 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
   margin: 0 auto;
 }
 @media (max-width: 900px) {
-  .faire-section { padding: 64px 0; }
-  .faire-section__grid { grid-template-columns: 1fr; gap: 44px; }
+  .faire-section { padding: 36px 0; }
+  .faire-section__grid { grid-template-columns: 1fr; gap: 28px; }
 }
 
 /* LEFT — headline + lead + primary CTA */
@@ -5719,7 +5825,7 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
 }
 
 @media (max-width: 760px) {
-  .faire-section { padding: 56px 0; }
+  .faire-section { padding: 28px 0; }
   .faire-card { padding: 20px 22px; gap: 16px; }
   .faire-card__icon { width: 40px; height: 40px; }
   .faire-card__body { flex-direction: column; gap: 4px; align-items: flex-start; }
@@ -5740,7 +5846,7 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
 /* =========================================================================
    NEWSLETTER V2 — split-card layout (image left, form right).
    Editorial cream palette, light chrome, modern brand-mailer pattern. */
-.newsletter-v2 { padding: 88px 0; background: var(--c-bg); }
+.newsletter-v2 { padding: 44px 0; background: var(--c-bg); }
 .newsletter-v2__card {
   display: grid;
   grid-template-columns: 5fr 6fr;
@@ -5931,7 +6037,7 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
 /* =========================================================================
    Legacy .newsletter-cta styles removed — the v2 replaced the v1 markup.
    Any references you find in older sections can safely be ignored. */
-.newsletter-cta { background: var(--c-surface); padding: 96px 0; position: relative; overflow: hidden; }
+.newsletter-cta { background: var(--c-surface); padding: 44px 0; position: relative; overflow: hidden; }
 .newsletter-cta::before {
   content: ''; position: absolute; inset: 0;
   background:
@@ -6206,50 +6312,79 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
    ───────────────────────────────────────────────────────────── */
 .header.header-as    { min-height: 0; transition: min-height .25s ease, box-shadow .25s ease; }
 .header-as-row {
-  grid-template-columns: 1fr auto;
+  /* Crystorama-inspired: social LEFT · logo CENTER · actions RIGHT · nav row underneath.
+     The outer columns are 1fr so the middle "auto" (logo) sits at true page-center. */
+  grid-template-columns: 1fr auto 1fr;
   grid-template-areas:
-    "logo actions"
-    "nav  nav";
+    "social  logo    actions"
+    "nav     nav     nav";
   align-items: center;
-  row-gap: 12px;
+  row-gap: 0;                                       /* tighten row spacing — nav row owns its own top gap via margin-top */
   column-gap: 24px;
-  padding: 28px 32px 22px;                        /* top / sides / bottom */
-  min-height: 0;                                  /* row heights determined by content, not min */
+  padding: 8px 32px 0;                              /* client rev: tightened top padding (was 22px) so header sits close to viewport edge */
+  min-height: 0;
   transition: padding .25s ease, min-height .25s ease;
 }
+.header-as-social           { grid-area: social;  justify-self: start; align-self: center; display: inline-flex; gap: 10px; }
 .header-as .brand-link      { grid-area: logo;    justify-self: center; }
-.header-as-actions          { grid-area: actions; justify-self: end; align-self: start; margin-top: 4px; }
-.nav-primary.nav-as         { grid-area: nav;     justify-self: center; margin-top: 6px; }
+.header-as-actions          { grid-area: actions; justify-self: end;   align-self: center; margin-top: 0; }
+.nav-primary.nav-as         { grid-area: nav;     justify-self: center; margin-top: 0; padding-bottom: 6px; }
 
-/* Logo scale in stacked (top) state — slightly reduced for balanced vertical rhythm */
-.header-as .brand-logo { height: 150px; max-width: 380px; }
+/* Social pill icons — circular outlined buttons like the reference */
+.header-as-social .social-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  color: var(--c-ink);
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+}
+.header-as-social .social-btn:hover { color: var(--c-primary); border-color: var(--c-primary); background: var(--c-primary-soft); }
+.header-as-social .social-btn svg   { width: 15px; height: 15px; }
 
-/* Tablet — same stacked shape, tighter padding */
+/* Nav — Crystorama style: uppercase, wide letter-spacing (active underline supplied by existing ::before) */
+.nav-primary.nav-as a {
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+}
+.nav-primary.nav-as a.is-active { color: var(--c-ink); }
+
+/* Logo — slightly larger since it's now the dominant page-centered mark */
+.header-as .brand-logo { height: 116px; max-width: 340px; }
+
+/* Tablet — same stacked shape, tighter padding, hide YouTube to save room */
 @media (max-width: 1100px) {
   .header-as-row {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto 1fr;
     grid-template-areas:
-      "logo actions"
-      "nav  nav";
-    padding: 22px 24px 18px;
+      "social  logo    actions"
+      "nav     nav     nav";
+    padding: 6px 24px 0;
     column-gap: 16px;
   }
-  .header-as .brand-logo { height: 120px; max-width: 300px; }
+  .header-as .brand-logo { height: 96px; max-width: 280px; }
+  .nav-primary.nav-as a  { font-size: 12px; letter-spacing: .12em; padding: 6px 10px 8px; }
 }
 
-/* Mobile — nav is hidden (drawer takes over); layout collapses to logo + actions */
+/* Mobile — nav is hidden (drawer takes over); social also hides to save room; logo + actions only */
 @media (max-width: 760px) {
   .header-as-row {
     grid-template-columns: 1fr auto;
     grid-template-areas: "logo actions";
-    padding: 14px 16px;
+    padding: 12px 16px;
     row-gap: 0;
   }
+  .header-as-social      { display: none; }
   .header-as .brand-link { justify-self: center; }
-  .header-as .brand-logo { height: 84px; max-width: 220px; }
+  .header-as-actions     { justify-self: end; align-self: center; }
+  .header-as .brand-logo { height: 68px; max-width: 200px; }
 }
 
-/* SCROLLED — revert to compact single-row: logo LEFT · nav CENTER · actions RIGHT */
+/* SCROLLED — revert to compact single-row: logo LEFT · nav CENTER · actions RIGHT
+   (Social cluster hides to keep the compact bar tight; it reappears when returning to the top.) */
 .header-wrap.is-scrolled .header.header-as { min-height: 76px; }
 .header-wrap.is-scrolled .header-as-row {
   grid-template-columns: minmax(180px, 240px) 1fr auto;
@@ -6259,9 +6394,12 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
   row-gap: 0;
   column-gap: 20px;
 }
+.header-wrap.is-scrolled .header-as-social       { display: none; }
 .header-wrap.is-scrolled .header-as .brand-link  { justify-self: start; }
 .header-wrap.is-scrolled .header-as-actions      { align-self: center; margin-top: 0; }
-.header-wrap.is-scrolled .nav-primary.nav-as     { margin-top: 0; }
+.header-wrap.is-scrolled .nav-primary.nav-as     { margin-top: 0; padding-bottom: 0; }
+.header-wrap.is-scrolled .nav-primary.nav-as a   { text-transform: none; letter-spacing: 0; font-size: 13.5px; padding: 8px 10px; }
+.header-wrap.is-scrolled .nav-primary.nav-as a.is-active::after { display: none; }
 .header-wrap.is-scrolled .header-as .brand-logo  { height: 56px !important; }
 
 @media (max-width: 1100px) {
@@ -6324,22 +6462,27 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 .promo-strip__msg strong { font-weight: 600; }
 .promo-strip__msg strong:first-of-type { font-weight: 700; }   /* headline stat */
 
-/* Nav polish — underline reveal instead of color shift on hover */
+/* Nav polish — underline reveal instead of color shift on hover
+   Client rev (Crystorama-style): uppercase with wide tracking for a wholesale-portal feel.
+   Padding kept tight so the row sits close under the logo without visible dead space. */
 .nav-primary.nav-as a {
   position: relative;
-  padding: 6px 12px;
+  padding: 6px 14px 8px;
   font-size: 13px;
-  letter-spacing: .01em;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
   color: var(--c-ink);
 }
 .nav-primary.nav-as a::before {
   content: '';
-  position: absolute; left: 12px; right: 12px; bottom: -2px;
-  height: 1.5px;
+  position: absolute; left: 14px; right: 14px; bottom: 0;
+  height: 2px;
   background: var(--c-ink);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform .3s var(--ease-out, ease);
+  border-radius: 2px;
 }
 .nav-primary.nav-as a:hover::before,
 .nav-primary.nav-as a.is-active::before { transform: scaleX(1); }
@@ -6497,30 +6640,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 .hero-full__pin-cta:hover { background: #fff; color: var(--c-primary); }
 
 /* ============ END ROUND 4 POLISH ============ */
-/* =========================================================================
-      HEADER FIX — mobile actions cluster (Shop on Faire + login/cart/menu
-      icons) was overflowing off the right edge of the screen on small
-      viewports. Root cause: a later unified ".btn" rule shares the same
-      specificity as ".btn-buy-now" and overrode its responsive padding/
-      font-size, so the button never shrank on mobile. This block wins the
-      cascade (placed last + !important) and hides the text button below
-      480px since the same action already lives in the mobile drawer footer.
-      ========================================================================= */
-   @media (max-width: 760px) {
-        .btn-buy-now {
-               padding: 6px 14px !important;
-               font-size: 12px !important;
-               min-height: 36px !important;
-        }
-        .header-as-actions { gap: 4px !important; }
-   }
-   @media (max-width: 480px) {
-        .btn-buy-now { display: none !important; }
-   }
-   .header-as-row { overflow: visible; }
-   .header-as-actions { flex-wrap: nowrap; min-width: 0; }
-   
-   /* ============ END CSS ============ */
+/* ============ END CSS ============ */
 </style>
 </head>
 <body>
@@ -6539,7 +6659,20 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 <div class="header-wrap">
 <div id="header-slot">
   <header class="header header-as" role="banner">
-    <div class="container header-row header-as-row">
+    <div class="container header-as-row">
+      <!-- Client rev (Crystorama-style): social cluster on the LEFT · logo center · account/cart right -->
+      <div class="header-as-social" aria-label="Follow Magic Scarf on social">
+        <a href="https://www.facebook.com/magicscarf" class="social-btn" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9V14.9H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/magicscarf" class="social-btn" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://www.youtube.com/channel/UCXLskc4sAfuppKmS-oJZ1Rw/" class="social-btn" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+        </a>
+      </div>
+
       <a href="#/" class="brand-link" aria-label="Magic Scarf — home">
         <img class="brand-logo" src="https://magicscarf.wizcommerce.com/wp-content/uploads/2026/07/logo-removebg-preview.png" alt="Magic Scarf — wholesale women's fashion" onerror="this.onerror=null;this.src='https://www.magicscarf.com/stores/eol/assets/images/logo.png';this.addEventListener('error',()=>{this.style.display='none';this.nextElementSibling.style.display='inline'},{once:true})">
         <span class="brand-mark" style="display:none">Magic Scarf</span>
@@ -6601,14 +6734,8 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 </div>
 </div>
 
-<!-- FLOATING APPLY CTA — sticky bottom-right; the single conversion action -->
-<button class="floating-apply" id="floatingApply" onclick="openRegister()" type="button" aria-label="Apply for a wholesale account">
-  <span class="floating-apply__perk">50% off first order</span>
-  <span class="floating-apply__label">
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>
-    Apply for Wholesale
-  </span>
-</button>
+<!-- FLOATING APPLY CTA removed per client rev (the hero already carries an "Apply for Wholesale" button). -->
+
 
 <!-- MOBILE DRAWER -->
 <div class="drawer" id="drawer" role="dialog" aria-label="Menu" aria-hidden="true">
@@ -6652,18 +6779,22 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
     <ul class="hero-full__track" id="heroTrack"></ul>
     <div class="hero-full__shade" aria-hidden="true"></div>
 
-    <!-- Hero CTA-only cluster: per-slide alignment puts the buttons on the empty side of each frame
-         so they never sit on a face, fabric detail, or busy area. No headline or lead copy —
-         the imagery does the talking, the bottom-right caption pill names the collection, and
-         the "View ___" button below the Apply CTA updates per slide to the right category. -->
+    <!-- Hero copy block: per-slide editorial (title + optional subtitle + bullets) lives on the LEFT
+         side of the frame, above two persistent CTAs — "Apply for Wholesale" (primary) and
+         "Shop the Look" (secondary, deep-links to the matching collection per slide). -->
     <div class="container hero-full__copy-wrap">
-      <div class="hero-full__copy hero-full__copy--cta-only">
+      <div class="hero-full__copy hero-full__copy--editorial">
+        <div class="hero-edit" id="heroEdit">
+          <h2 class="hero-edit__title"    id="heroEditTitle">A Poncho for All Seasons</h2>
+          <p  class="hero-edit__subtitle" id="heroEditSubtitle" hidden></p>
+          <ul class="hero-edit__bullets"  id="heroEditBullets"></ul>
+        </div>
         <div class="hero-edit-cta">
           <button class="btn btn-primary btn-icon-r" onclick="openRegister()">Apply for Wholesale
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
           <a id="heroViewCta" href="#/catalog" class="btn btn-ghost btn-icon-r">
-            <span id="heroViewLabel">Shop the Catalog</span>
+            <span id="heroViewLabel">Shop the Look</span>
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
         </div>
@@ -6701,7 +6832,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
       <!-- Client rev: heading + subtitle center-aligned, CTA repositioned below -->
       <div class="section-head section-head--center">
         <span class="eyebrow" id="seasonalEyebrow">Magic Scarf Signature Items</span>
-        <h2 id="seasonalTitle">Signature pieces — hand-picked for this season.</h2>
+        <h2 id="seasonalTitle">Signature Collections — hand-picked for this season.</h2>
         <p class="editor-note" id="seasonalNote" style="font-family:var(--ff-display); font-style:italic; color:var(--c-ink-soft); font-size: 1.0625rem; margin: 8px auto 0; max-width: 640px;">The pieces that define the Magic Scarf line — reordered season after season by boutique buyers nationwide.</p>
         <div class="section-head__cta">
           <a href="#/c/best-picks" class="btn btn-outline btn-icon-r btn-sm">Shop the Season
@@ -6720,7 +6851,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
       <div class="section-head section-head--center reveal">
         <span class="eyebrow">The Full Catalog</span>
         <h2>Every category in the line.</h2>
-        <p class="editor-note" style="font-family:var(--ff-display); font-style:italic; color:var(--c-ink-soft); font-size: 1.0625rem; margin: 8px auto 0; max-width: 640px;">Seventeen categories, restocked every Tuesday from our California warehouse.</p>
+        <p class="editor-note" style="font-family:var(--ff-display); font-style:italic; color:var(--c-ink-soft); font-size: 1.0625rem; margin: 8px auto 0; max-width: 640px;">Every category in the Magic Scarf line, restocked weekly from our California warehouse.</p>
         <div class="section-head__cta">
           <a href="#/catalog" class="btn btn-outline btn-icon-r btn-sm">View Full Catalog
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -7576,12 +7707,6 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
           <li><a href="#/shipping">Shipping &amp; Returns</a></li>
           <li><a href="#/privacy-policy">Privacy &amp; Security</a></li>
         </ul>
-        <div class="footer-pay">
-          <span class="pay-pill">VISA</span>
-          <span class="pay-pill">MC</span>
-          <span class="pay-pill">AMEX</span>
-          <span class="pay-pill">NET-30</span>
-        </div>
       </div>
 
       <!-- Client rev: Newsletter wired to Constant Contact. Replace CC_ACCOUNT_ID + CC_LIST_ID with real values.
@@ -7599,8 +7724,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
           <input type="hidden" name="list"      value="CC_LIST_ID">       <!-- The Look Book list id -->
           <input type="hidden" name="source"    value="magicscarf-footer">
           <input type="hidden" name="required"  value="ea">
-          <label for="footer-news-email" class="sr-only">Email address</label>
-          <input id="footer-news-email" name="ea" type="email" placeholder="boutique@example.com" required autocomplete="email" inputmode="email">
+          <input id="footer-news-email" name="ea" type="email" placeholder="boutique@example.com" aria-label="Email address" required autocomplete="email" inputmode="email">
           <button type="submit" aria-label="Subscribe to The Look Book">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
@@ -7609,7 +7733,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
       </div>
     </div>
     <div class="footer-base">
-      <div>© 2003–2026 Magic Scarf, LLC. All rights reserved.</div>
+      <div>© 2003–2026 Magic Scarf, LLC. All rights reserved. Powered by WizCommerce</div>
       <div>
         <a href="#/privacy-policy">Privacy</a>
         <a href="#/return-policy">Returns</a>
@@ -7853,7 +7977,8 @@ async function loadWizCommerceData() {
         slug: c.slug,
         id:   i + 1,
         name: c.name,
-        img:  c.img || _findChildImg(c.tree) || catPicks[c.slug] || null,
+        img:  (typeof WC_CATEGORY_IMAGES !== 'undefined' && WC_CATEGORY_IMAGES[c.slug])
+              || c.img || _findChildImg(c.tree) || catPicks[c.slug] || null,
         count: c.count,
         desc: c.desc,
       }));
@@ -7971,17 +8096,64 @@ const SEASONAL = [
 //   align controls WHERE the headline+CTA block sits over the image
 //   pos controls which side of the image is preserved when cropped (object-position)
 //   These were tuned slide-by-slide so the copy never lands on faces, product details, or busy areas.
-// Client rev: hero slides locked to the exact 6 banners specified by the customer.
-// Ordered visually — lightweight scarves → beach ruanas → floral kimonos → cashmere-feel
-// ponchos → six-button ponchos → magnetic brooches. All 6 protected against side-crop
-// (models sit toward the right of every frame, so `pos` is biased right).
+// Client rev (2026-07): hero slides swapped to Directus-hosted no-text banners.
+// Each slide carries an editorial copy block (title + bullets) that renders as a
+// left-aligned overlay on top of the hero image. CTAs stay identical across all
+// slides — "Apply for Wholesale" (primary) + "Shop the Look" (secondary, deep-links
+// to the collection that matches the slide).
 const HERO_IMAGES = [
-  { src: 'https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1295.main.jpg', caption: 'A Touch of Victorian Spice — Oblong & Infinity',       align: 'left', pos: '65% 50%', cta: { label: 'View Victorian Lace Scarves',   href: '#/c/scarves-shawls' } },
-  { src: 'https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1159.main.jpg', caption: '1C15 Light Knit Ruanas — Summer Elegance',             align: 'left', pos: '50% 50%', cta: { label: 'View Light Knit Ruanas',        href: '#/c/capes-coverups-vests' } },
-  { src: 'https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1231.main.jpg', caption: '#5098 Floral Print Kimonos',                            align: 'left', pos: '65% 50%', cta: { label: 'View Floral Print Kimonos',     href: '#/c/capes-coverups-vests' } },
-  { src: 'https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1291.main.jpg', caption: 'A Poncho for All Seasons — Cashmere-Feel',              align: 'left', pos: '50% 50%', cta: { label: 'View Cashmere-Feel Ponchos',   href: '#/c/ponchos' } },
-  { src: 'https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1297.main.jpg', caption: 'New Arrival #3970 — Six Button Ponchos',                align: 'left', pos: '65% 50%', cta: { label: 'View Six-Button Ponchos',      href: '#/c/ponchos' } },
-  { src: 'https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1298.main.jpg', caption: 'New Magnetic Brooches — Ready to Go',                   align: 'left', pos: '65% 50%', cta: { label: 'View Magnetic Brooches',        href: '#/c/accessories' } }
+  { src: 'https://directus-g-p.sourcerer.tech/assets/407bb8fe-b7d3-4e2a-a0b1-a3f3f313f9b5',
+    title: '#5098 Floral Print Kimonos',
+    bullets: ['Ultra Soft Cotton Touch', 'Bold Multi Prints', 'Lightweight for Warm Weather', 'One Size fits Most'],
+    caption: '#5098 Floral Print Kimonos',
+    align: 'left', pos: '75% 50%',
+    cta:  { label: 'Shop the Look',          href: '#/c/capes-coverups-vests' } },
+
+  { src: 'https://directus-g-p.sourcerer.tech/assets/1f19baa0-29ff-42a9-82f9-d096d2b5dc62',
+    title: 'Summer Time Elegance',
+    subtitle: '1C15 Light Knit Ruanas',
+    bullets: ['A Standout Design for All Occasions'],
+    caption: '1C15 Light Knit Ruanas — Summer Elegance',
+    align: 'left', pos: '75% 50%',
+    cta:  { label: 'Shop the Look',          href: '#/c/capes-coverups-vests' } },
+
+  { src: 'https://directus-g-p.sourcerer.tech/assets/269cddf3-88d4-4c9f-ade2-0384803f9ce1',
+    title: 'A Touch of Victorian Spice',
+    bullets: ['Oblong and Infinity Styles'],
+    caption: 'A Touch of Victorian Spice',
+    align: 'left', pos: '65% 50%',
+    cta:  { label: 'Shop the Look',          href: '#/c/scarves-shawls' } },
+
+  { src: 'https://directus-g-p.sourcerer.tech/assets/9cedfb7f-84e2-41bf-9c61-4d052bb3d3ff',
+    title: '#3850 Island Kimonos',
+    bullets: ['Casual Textured Crepe', 'Structured Design', 'Perfect for a stroll by the sea', 'One Size Fit'],
+    caption: '#3850 Island Kimonos',
+    align: 'left', pos: '75% 50%',
+    cta:  { label: 'Shop the Look',          href: '#/c/capes-coverups-vests' } },
+
+  { src: 'https://directus-g-p.sourcerer.tech/assets/a99ce7df-b168-4343-ab50-6f667cc66244',
+    title: 'A Poncho for All Seasons',
+    subtitle: 'for Many Reasons',
+    bullets: [],
+    caption: 'A Poncho for All Seasons',
+    align: 'left', pos: '75% 50%',
+    cta:  { label: 'Shop the Look',          href: '#/c/ponchos' } },
+
+  { src: 'https://directus-g-p.sourcerer.tech/assets/64814f51-5beb-4fd7-a8ef-095a5dfb713a',
+    title: 'New Arrival #3970',
+    subtitle: 'Six Button Ponchos',
+    bullets: ['Light Mesh with Natural Shell Buttons'],
+    caption: 'New Arrival #3970 — Six Button Ponchos',
+    align: 'left', pos: '75% 50%',
+    cta:  { label: 'Shop the Look',          href: '#/c/ponchos' } },
+
+  { src: 'https://directus-g-p.sourcerer.tech/assets/0dc8b33a-f795-4dcd-88c2-ccb90bf5e1ca',
+    title: 'New Magnetic Brooches',
+    subtitle: 'Ready to Go',
+    bullets: [],
+    caption: 'New Magnetic Brooches — Ready to Go',
+    align: 'left', pos: '75% 50%',
+    cta:  { label: 'Shop the Look',          href: '#/c/accessories' } }
 ];
 const HERO_IMAGE_URLS = HERO_IMAGES.map(h => h.src);
 
@@ -8250,18 +8422,15 @@ function renderCatalogGrid(targetId) {
 function renderSeasonal() {
   const tgt = document.getElementById('seasonalRail');
   if (!tgt) return;
-  // Pick 8 hero categories for the home page (not all 17 — premium-curated)
-  const HOME_PICKS = ['ponchos','scarves-shawls','button-style-scarves','shawls-and-wraps','tops-tees','accessories','glitz-glitter','art-design-line'];
-  const list = HOME_PICKS.map(slug => CATALOG.find(c => c.slug === slug)).filter(Boolean);
-  tgt.innerHTML = list.map(c => {
-    const fallback = `https://www.magicscarf.com/stores/common_files/categories/category_${c.id}.jpg`;
+  // Client rev: home-page Full Catalog rail shows EVERY category in CATALOG (5-per-row grid).
+  // No hover-label or bottom name — the image assets themselves already carry the category label.
+  tgt.innerHTML = CATALOG.map(c => {
+    const fallback = 'https://www.magicscarf.com/stores/common_files/categories/category_' + (c.id||'') + '.jpg';
     return `
     <a href="#/c/${c.slug}" class="cat-tile" aria-label="Browse ${c.name}">
       <div class="cat-tile-img">
-        <img src="${c.img}" alt="${c.name}" loading="lazy" onerror="this.onerror=null;this.src='${fallback}'">
-        <span class="cat-tile__hover-label"><em>${c.name}</em>${c.count ? ` <span style="opacity:.7;font-style:normal;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-top:6px;">${c.count} SKUs</span>` : ''}</span>
+        <img src="${c.img || ''}" alt="${c.name}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${fallback}'">
       </div>
-      <span class="cat-tile-name">${c.name}</span>
     </a>
   `;}).join('');
 }
@@ -8329,12 +8498,34 @@ function heroGoTo(i) {
     cap.textContent = (isMobile && txt.length > 30) ? (txt.slice(0, 28).trim() + '…') : txt;
     cap.title = txt;
   }
-  // Per-slide "View ___" CTA — points to the collection that matches the current banner.
+  // Per-slide editorial copy block (left overlay): title + optional subtitle + bullets
+  const editTitle    = document.getElementById('heroEditTitle');
+  const editSubtitle = document.getElementById('heroEditSubtitle');
+  const editBullets  = document.getElementById('heroEditBullets');
+  if (editTitle && slide) {
+    editTitle.textContent = slide.title || slide.caption || '';
+  }
+  if (editSubtitle && slide) {
+    if (slide.subtitle) {
+      editSubtitle.textContent = slide.subtitle;
+      editSubtitle.hidden = false;
+    } else {
+      editSubtitle.textContent = '';
+      editSubtitle.hidden = true;
+    }
+  }
+  if (editBullets && slide) {
+    editBullets.innerHTML = (slide.bullets || [])
+      .map(b => `<li>${b.replace(/</g,'&lt;')}</li>`)
+      .join('');
+    editBullets.hidden = !((slide.bullets || []).length);
+  }
+  // Per-slide "Shop the Look" CTA — deep-links to the collection that matches the current banner.
   // Special-cased "#apply" opens the wholesale register modal rather than navigating.
   const viewCta = document.getElementById('heroViewCta');
   const viewLabel = document.getElementById('heroViewLabel');
   if (viewCta && viewLabel && slide) {
-    const cta = slide.cta || { label: 'Shop the Catalog', href: '#/catalog' };
+    const cta = slide.cta || { label: 'Shop the Look', href: '#/catalog' };
     viewLabel.textContent = cta.label;
     if (cta.href === '#apply') {
       viewCta.setAttribute('href', '#');
@@ -9547,13 +9738,84 @@ window.SEASONAL_PICKS = {
   // 8 categories total; admin team can reorder / swap slugs without touching markup.
   season: 'Signature',
   eyebrow: "Magic Scarf Signature Items",
-  title:   "Signature pieces — hand-picked for this season.",
+  title:   "Signature Collections — hand-picked for this season.",
   note:    "The pieces that define the Magic Scarf line — reordered season after season by boutique buyers nationwide.",
   slugs: ['ponchos', 'scarves-shawls', 'button-style-scarves', 'shawls-and-wraps', 'accessories', 'capes-coverups-vests', 'glitz-glitter', 'art-design-line'],
   cta_href: '#/catalog'
 };
 /* Featured Items — small carousel of promoted SKUs (client rev). Curated by merchandising. */
 window.FEATURED_ITEMS = ['8672', '3226', '2997', '1254']; // 4 hero SKUs — sales / rep / seasonal pick
+
+/* -------------------------------------------------------------------------
+   WC-provided category → image map (client rev). Applied at runtime by
+   loadWizCommerceData() so every category tile on the site (Full Catalog grid
+   AND the Signature Collections rail) uses the correct WC CDN artwork.
+   ------------------------------------------------------------------------- */
+const WC_CATEGORY_IMAGES = {
+  'assorted-tops-tunics':                  'https://cdn.wizcommerce.com/assets/db567c8d-205e-4f22-b700-dcebc6e01bc6.png',
+  'pinpoint-style-shirts':                 'https://cdn.wizcommerce.com/assets/5323ef36-ec45-4ac4-935f-b0bc1b9161f9.png',
+  'autumn-ruanas':                         'https://cdn.wizcommerce.com/assets/a07ca6c7-bc30-416b-ae19-763fac79ced0.png',
+  'bags-and-totes':                        'https://cdn.wizcommerce.com/assets/228b1ab5-1ff9-4112-bc72-2fa68c870b6e.png',
+  'ponchos-for-autumn-and-winter':         'https://cdn.wizcommerce.com/assets/a00b63ca-8496-40bf-9265-662958f2282e.png',
+  'brushed-microfiber-tops':               'https://cdn.wizcommerce.com/assets/b1df49f1-ee07-4e3f-9ac8-db94a546801d.png',
+  'tees-and-tops':                         'https://cdn.wizcommerce.com/assets/8a585d7b-cdf9-4948-a5ef-8f51afcf97cd.png',
+  'button-style-scarves-shawls':           'https://cdn.wizcommerce.com/assets/0fd200cf-aaab-44d9-a5aa-d8a405a6a62e.png',
+  'camp-style-vests-and-jackets':          'https://cdn.wizcommerce.com/assets/bbf22cd4-bf3b-455c-939f-d42c2c6943cd.png',
+  'capes-for-autumn':                      'https://cdn.wizcommerce.com/assets/9329e022-77a4-4944-bd79-0274df653bbe.png',
+  'coin-styles':                           'https://cdn.wizcommerce.com/assets/a3c4c305-d7d4-43f8-93be-6a72612794ae.png',
+  'diamond-crystal-zipper-vests-and-jackets': 'https://cdn.wizcommerce.com/assets/826b9124-e982-49f8-97d5-e81377953d1e.png',
+  'fall-winter-oblong-scarves':            'https://cdn.wizcommerce.com/assets/1644ec1b-f8d7-4284-b967-478ce687fe8a.png',
+  'fall-winter-capes-and-cover-ups':       'https://cdn.wizcommerce.com/assets/668e8d43-df2d-4faf-8ad5-924604b6d2fa.png',
+  'fall-winter-hats-headwear':             'https://cdn.wizcommerce.com/assets/5e5dba43-d65e-4403-a687-b58267b16991.png',
+  'fall-winter-infinity-scarves-1':        'https://cdn.wizcommerce.com/assets/f499719d-9fe5-483e-98b1-1f64be6e00ce.png',
+  'fall-winter-shawls':                    'https://cdn.wizcommerce.com/assets/b609a338-467d-4cb6-9282-e93a40ed1962.png',
+  'georgette-crush-tops':                  'https://cdn.wizcommerce.com/assets/c611b665-bc07-435c-af25-c47cdd094722.png',
+  'georgette-mini-pleats':                 'https://cdn.wizcommerce.com/assets/b2324ae3-55ac-451b-b7dd-eb72cbda09da.png',
+  'kimono-styles':                         'https://cdn.wizcommerce.com/assets/f643b4b8-a3dd-4be7-9ad9-1edf3a0c8ca7.png',
+  'gloves-and-mittens':                    'https://cdn.wizcommerce.com/assets/8cd86854-b480-4026-9752-500ff11af78a.png',
+  'gourmet-popcorn-shirts':                'https://cdn.wizcommerce.com/assets/b7547cf4-e4e1-48a0-8342-708cc69def01.png',
+  'jumpsuits-and-matching-sets':           'https://cdn.wizcommerce.com/assets/7f8a35c7-3f7e-46fe-b55a-95bde6893dd8.png',
+  'kaftans-and-dashiki-style-tops':        'https://cdn.wizcommerce.com/assets/09decfee-3acf-471c-aeb7-83251e08a2b8.png',
+  'light-satin-scarves-and-shawls':        'https://cdn.wizcommerce.com/assets/1a65c619-8c26-447a-9b4f-701cc512d21b.png',
+  'm-fashion-pants':                       'https://cdn.wizcommerce.com/assets/dbd73de1-1e44-47a5-9574-9bd03ca93f11.png',
+  'lightweight-infinity-scarves':          'https://cdn.wizcommerce.com/assets/b1ee4c65-35d7-42bf-8912-9f28d852fc8f.png',
+  'lightweight-neckerchiefs-and-squares':  'https://cdn.wizcommerce.com/assets/3dd1c88b-519b-4309-9758-f9d6b2881121.png',
+  'lightweight-oblong-scarves':            'https://cdn.wizcommerce.com/assets/d483815b-fd0e-4958-9548-428e45143765.png',
+  'lightweight-ponchos':                   'https://cdn.wizcommerce.com/assets/66efce17-6a61-480a-9b3d-ec6f349db7f0.png',
+  'metallic':                              'https://cdn.wizcommerce.com/assets/d0de74ba-b81e-4b56-ae24-b0c1fb0705ea.png',
+  'lightweight-shawls-and-wraps':          'https://cdn.wizcommerce.com/assets/145d3add-933d-4319-b3c1-61be23aaea2e.png',
+  'm-fashion-leggings-and-jeggings':       'https://cdn.wizcommerce.com/assets/8f7d6138-f9f3-4485-81a1-9071ac0d76ae.png',
+  'magic-crush-tops-year-round-weight':    'https://cdn.wizcommerce.com/assets/29f0b03a-db71-43fc-90fe-d28d244e2eb7.png',
+  'magic-crush-ultra-light-tops':          'https://cdn.wizcommerce.com/assets/52f241a7-16bd-4d43-927c-c56a8c7dda80.png',
+  'magic-scarves-convertible-comfort':     'https://cdn.wizcommerce.com/assets/85fba61f-e09a-435e-9be6-b3e2ad7015c9.png',
+  'magic-smoothwear-styles':               'https://cdn.wizcommerce.com/assets/b2d7b4f7-86f1-4cc5-a987-13ab639a4d35.png',
+  'origami-petal-shirts':                  'https://cdn.wizcommerce.com/assets/5c68f0ce-f2fc-4454-90db-bc79dc9b26b6.png',
+  'our-favorite-color-is-spring':          'https://cdn.wizcommerce.com/assets/fa8896a9-9555-43f6-bb09-3f610fbcd41f.png',
+  'pants-capris':                          'https://cdn.wizcommerce.com/assets/a5f7b6c5-2307-4bd9-bdbd-65bc931b7e6d.png',
+  'pashmina-style-shawls':                 'https://cdn.wizcommerce.com/assets/0d802d18-9493-4bf1-83f0-0046723384d2.png',
+  'perfect-shawls-for-autumn':             'https://cdn.wizcommerce.com/assets/7f02fef4-5ab8-4ad4-9c82-690e3a5c1de3.png',
+  'satin-mini-pleats':                     'https://cdn.wizcommerce.com/assets/c6a86f17-2cfd-4f71-a716-923f9c3057b6.png',
+  'scarves-with-magnetic-clasps':          'https://cdn.wizcommerce.com/assets/87f58ee5-b62a-48a2-8f36-2ff7c6208758.png',
+  'shanghai-beaded-tops-and-scarves':      'https://cdn.wizcommerce.com/assets/e271c922-8d6e-4ef3-8a06-b09f0fa7b4ff.png',
+  'silky-dress-scarves-and-button-styles': 'https://cdn.wizcommerce.com/assets/1b7d8c2a-e614-45b2-a9dd-4394a85e4391.png',
+  'slinky-travel-tops':                    'https://cdn.wizcommerce.com/assets/790ff03c-61b3-424c-8708-5ce29a46ce59.png',
+  'special-prices-for-members':            'https://cdn.wizcommerce.com/assets/a32e16cc-75df-4842-87c6-ae2b93189aba.png',
+  'square-scarves':                        'https://cdn.wizcommerce.com/assets/0d6c6f44-5113-4aec-bc0e-900828e0101f.png',
+  'spike-design-shirts':                   'https://cdn.wizcommerce.com/assets/c65a351f-d3ef-42b2-95ce-ede3cff87adb.png',
+  'spring-special-30-off':                 'https://cdn.wizcommerce.com/assets/807f728a-d6ca-4b2c-982e-b4593af1335d.png',
+  'western-designs':                       'https://cdn.wizcommerce.com/assets/f1f2c04d-0a0d-4ace-9657-607a5a3f88ff.png',
+  'winter-ponchos-faux-fur-and-fur-trim':  'https://cdn.wizcommerce.com/assets/3f44987b-3d9c-4c13-835d-a6d9dd10f44a.png',
+  'fall-and-winter-hats-and-headbands':    'https://cdn.wizcommerce.com/assets/3ff5a6ed-1e4e-42e9-9fe3-84e3f6ff1c22.png',
+  'satin-gourmet-popcorn-shirts':          'https://cdn.wizcommerce.com/assets/4dac5e5e-4ae5-4c16-9811-f995b9e0de53.png'
+};
+
+// Signature Collections rail — one row of 4 real WC COLLECTIONS only (no categories).
+const HOME_COLLECTIONS = [
+  { name: 'Best Picks',     href: '#/c/best-picks',    img: 'https://cdn.wizcommerce.com/assets/7e256c23-c64f-4927-b935-ab58df48d8fd.jpg' },
+  { name: 'Discount Items', href: '#/sale',            img: 'https://cdn.wizcommerce.com/assets/beceab78-97d4-4c84-9a2e-b064d5a147d8.jpg' },
+  { name: 'New Arrivals',   href: '#/c/new-arrivals',  img: 'https://cdn.wizcommerce.com/assets/055100ad-6d34-45e5-ad8b-76f3c4fa396f.jpg' },
+  { name: 'Coming Soon',    href: '#/c/coming-soon',   img: 'https://cdn.wizcommerce.com/assets/81be2635-555d-479c-a734-8faa8d2e3453.jpg' }
+];
 
 function renderSeasonalPicks() {
   const wrap = document.getElementById('seasonalPicksRail');
@@ -9565,18 +9827,116 @@ function renderSeasonalPicks() {
   if (eye && cfg.eyebrow) eye.textContent = cfg.eyebrow;
   if (ttl && cfg.title)   ttl.textContent = cfg.title;
   if (not && cfg.note)    not.textContent = cfg.note;
-  const cats = (cfg.slugs || []).map(slug => CATALOG.find(c => c.slug === slug)).filter(Boolean);
-  wrap.innerHTML = cats.map(c => {
-    const fallback = `https://www.magicscarf.com/stores/common_files/categories/category_${c.id}.jpg`;
-    return `
-    <a href="#/c/${c.slug}" class="cat-tile" aria-label="Browse ${c.name}">
+  // Client rev: hover-label + tile name removed since the image assets already carry the
+  // collection/category branding — no duplicate text below or on hover.
+  wrap.innerHTML = HOME_COLLECTIONS.map(c => `
+    <a href="${c.href}" class="cat-tile" aria-label="Shop ${c.name}">
       <div class="cat-tile-img">
-        <img src="${c.img}" alt="${c.name}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${fallback}'">
-        <span class="cat-tile__hover-label"><em>${c.name}</em>${c.count ? ` <span style="opacity:.7;font-style:normal;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-top:6px;">${c.count} SKUs</span>` : ''}</span>
+        <img src="${c.img}" alt="${c.name} — Magic Scarf collection" loading="lazy" decoding="async">
       </div>
-      <span class="cat-tile-name">${c.name}</span>
-    </a>`;
-  }).join('');
+    </a>`).join('');
+}
+
+/* -------------------------------------------------------------------------
+   FULL CATALOG — 69 top-level categories exactly as specified by the client,
+   with real WC CDN / Sourcerer imagery. Order matches the client's list.
+   Any nested tree entries (Parent>Child) are excluded — only top-level cats.
+   ------------------------------------------------------------------------- */
+const WC_FULL_CATALOG_LIST = [
+  { name: 'Slinky Vests and Jackets',                  img: 'https://fileserver-g-p.sourcerer.tech/files/8cf04995-c57e-451f-aeee-d64dcb1f3486' },
+  { name: 'Shrugs and Cocoon Capes',                   img: 'https://fileserver-g-p.sourcerer.tech/files/30b83ddf-8f81-4b88-9d95-aeee9c7540a6' },
+  { name: 'Fall and Winter Cardigans',                 img: 'https://fileserver-g-p.sourcerer.tech/files/de8572d7-e81f-4042-b3e5-0be048bac955' },
+  { name: 'Light Weight Capes and Cover-ups',          img: 'https://fileserver-g-p.sourcerer.tech/files/e00c60a3-231c-4a45-868d-cd74b0033e7e' },
+  { name: 'Capes, Coverups and Vests',                 img: 'https://fileserver-g-p.sourcerer.tech/files/1ee5e9cb-ab23-42df-92d8-29ad6a007872' },
+  { name: 'Coats and Jackets',                         img: 'https://fileserver-g-p.sourcerer.tech/files/cad57a83-e2e4-411f-980d-01c72fdf0d41' },
+  { name: 'Ponchos',                                   img: 'https://fileserver-g-p.sourcerer.tech/files/593690a0-18f3-4482-b780-8e800a28a984' },
+  { name: 'Sweaters & Sweater Vests',                  img: 'https://fileserver-g-p.sourcerer.tech/files/1b9ef6a4-a9ea-403e-80d3-e89b2c462c8c' },
+  { name: 'Best Picks this Week!',                     img: 'https://fileserver-g-p.sourcerer.tech/files/70b34889-e53a-4a75-aa2b-0d7fe98a1d5f' },
+  { name: 'Leggings and Pants',                        img: 'https://fileserver-g-p.sourcerer.tech/files/05e89ca5-a430-45a6-be64-86e80f8dbb89' },
+  { name: 'Skirts and Dresses',                        img: 'https://fileserver-g-p.sourcerer.tech/files/4bc286a3-911e-4105-8234-fca266984979' },
+  { name: 'Accessories and Essentials',                img: 'https://fileserver-g-p.sourcerer.tech/files/f284dddf-9a21-466d-b458-eed1c92b7d10' },
+  { name: 'Glitz and Glitter',                         img: 'https://fileserver-g-p.sourcerer.tech/files/bbf32310-2af9-453d-b9f8-c3ec80d5500c' },
+  { name: 'Art Design Line',                           img: 'https://fileserver-g-p.sourcerer.tech/files/e4c9c0cd-e995-4216-a221-5cb56a4bff66' },
+  { name: 'Assorted Tops & Tunics',                    img: 'https://cdn.wizcommerce.com/assets/db567c8d-205e-4f22-b700-dcebc6e01bc6.png' },
+  { name: 'Autumn Ruanas',                             img: 'https://cdn.wizcommerce.com/assets/a07ca6c7-bc30-416b-ae19-763fac79ced0.png' },
+  { name: 'Bags and Totes',                            img: 'https://cdn.wizcommerce.com/assets/228b1ab5-1ff9-4112-bc72-2fa68c870b6e.png' },
+  { name: 'Brushed Microfiber Tops',                   img: 'https://cdn.wizcommerce.com/assets/b1df49f1-ee07-4e3f-9ac8-db94a546801d.png' },
+  { name: 'Button Style Scarves & Shawls',             img: 'https://cdn.wizcommerce.com/assets/0fd200cf-aaab-44d9-a5aa-d8a405a6a62e.png' },
+  { name: 'Camp Style Vests and Jackets',              img: 'https://cdn.wizcommerce.com/assets/bbf22cd4-bf3b-455c-939f-d42c2c6943cd.png' },
+  { name: 'Capes for Autumn',                          img: 'https://cdn.wizcommerce.com/assets/9329e022-77a4-4944-bd79-0274df653bbe.png' },
+  { name: 'Coin Styles',                               img: 'https://cdn.wizcommerce.com/assets/a3c4c305-d7d4-43f8-93be-6a72612794ae.png' },
+  { name: 'Diamond Crystal Zipper Vests and Jackets',  img: 'https://cdn.wizcommerce.com/assets/826b9124-e982-49f8-97d5-e81377953d1e.png' },
+  { name: 'Fall and Winter Hats and Headbands',        img: 'https://cdn.wizcommerce.com/assets/3ff5a6ed-1e4e-42e9-9fe3-84e3f6ff1c22.png' },
+  { name: 'Fall /Winter Oblong Scarves',               img: 'https://cdn.wizcommerce.com/assets/1644ec1b-f8d7-4284-b967-478ce687fe8a.png' },
+  { name: 'Fall/Winter Capes and Cover-ups',           img: 'https://cdn.wizcommerce.com/assets/668e8d43-df2d-4faf-8ad5-924604b6d2fa.png' },
+  { name: 'Fall/Winter Hats & Headwear',               img: 'https://cdn.wizcommerce.com/assets/5e5dba43-d65e-4403-a687-b58267b16991.png' },
+  { name: 'Fall/Winter Infinity Scarves 1',            img: 'https://cdn.wizcommerce.com/assets/f499719d-9fe5-483e-98b1-1f64be6e00ce.png' },
+  { name: 'Fall/Winter Shawls',                        img: 'https://cdn.wizcommerce.com/assets/b609a338-467d-4cb6-9282-e93a40ed1962.png' },
+  { name: 'Georgette Crush Tops',                      img: 'https://cdn.wizcommerce.com/assets/c611b665-bc07-435c-af25-c47cdd094722.png' },
+  { name: 'Georgette Mini Pleats',                     img: 'https://cdn.wizcommerce.com/assets/b2324ae3-55ac-451b-b7dd-eb72cbda09da.png' },
+  { name: 'Gloves and Mittens',                        img: 'https://cdn.wizcommerce.com/assets/8cd86854-b480-4026-9752-500ff11af78a.png' },
+  { name: 'Gourmet Popcorn Shirts',                    img: 'https://cdn.wizcommerce.com/assets/b7547cf4-e4e1-48a0-8342-708cc69def01.png' },
+  { name: 'Jumpsuits and Matching Sets',               img: 'https://cdn.wizcommerce.com/assets/7f8a35c7-3f7e-46fe-b55a-95bde6893dd8.png' },
+  { name: 'Kaftans and Dashiki Style Tops',            img: 'https://cdn.wizcommerce.com/assets/09decfee-3acf-471c-aeb7-83251e08a2b8.png' },
+  { name: 'Kimono Styles',                             img: 'https://cdn.wizcommerce.com/assets/f643b4b8-a3dd-4be7-9ad9-1edf3a0c8ca7.png' },
+  { name: 'Light Satin Scarves and Shawls',            img: 'https://cdn.wizcommerce.com/assets/1a65c619-8c26-447a-9b4f-701cc512d21b.png' },
+  { name: 'Lightweight Infinity Scarves',              img: 'https://cdn.wizcommerce.com/assets/b1ee4c65-35d7-42bf-8912-9f28d852fc8f.png' },
+  { name: 'Lightweight Neckerchiefs and Squares',      img: 'https://cdn.wizcommerce.com/assets/3dd1c88b-519b-4309-9758-f9d6b2881121.png' },
+  { name: 'Lightweight Oblong Scarves',                img: 'https://cdn.wizcommerce.com/assets/d483815b-fd0e-4958-9548-428e45143765.png' },
+  { name: 'Lightweight Ponchos',                       img: 'https://cdn.wizcommerce.com/assets/66efce17-6a61-480a-9b3d-ec6f349db7f0.png' },
+  { name: 'Lightweight Shawls and Wraps',              img: 'https://cdn.wizcommerce.com/assets/145d3add-933d-4319-b3c1-61be23aaea2e.png' },
+  { name: 'M Fashion Leggings and Jeggings',           img: 'https://cdn.wizcommerce.com/assets/8f7d6138-f9f3-4485-81a1-9071ac0d76ae.png' },
+  { name: 'M Fashion Pants',                           img: 'https://cdn.wizcommerce.com/assets/dbd73de1-1e44-47a5-9574-9bd03ca93f11.png' },
+  { name: 'Magic Crush Tops (Year Round Weight)',      img: 'https://cdn.wizcommerce.com/assets/29f0b03a-db71-43fc-90fe-d28d244e2eb7.png' },
+  { name: 'Magic Crush Ultra Light Tops',              img: 'https://cdn.wizcommerce.com/assets/52f241a7-16bd-4d43-927c-c56a8c7dda80.png' },
+  { name: 'Magic Scarves - Convertible Comfort',       img: 'https://cdn.wizcommerce.com/assets/85fba61f-e09a-435e-9be6-b3e2ad7015c9.png' },
+  { name: 'Magic SmoothWear Styles',                   img: 'https://cdn.wizcommerce.com/assets/b2d7b4f7-86f1-4cc5-a987-13ab639a4d35.png' },
+  { name: 'Metallic',                                  img: 'https://cdn.wizcommerce.com/assets/d0de74ba-b81e-4b56-ae24-b0c1fb0705ea.png' },
+  { name: 'Origami & Petal Shirts',                    img: 'https://cdn.wizcommerce.com/assets/5c68f0ce-f2fc-4454-90db-bc79dc9b26b6.png' },
+  { name: 'Our Favorite Color Is Spring',              img: 'https://cdn.wizcommerce.com/assets/fa8896a9-9555-43f6-bb09-3f610fbcd41f.png' },
+  { name: 'Pants & Capris',                            img: 'https://cdn.wizcommerce.com/assets/a5f7b6c5-2307-4bd9-bdbd-65bc931b7e6d.png' },
+  { name: 'Pashmina Style Shawls',                     img: 'https://cdn.wizcommerce.com/assets/0d802d18-9493-4bf1-83f0-0046723384d2.png' },
+  { name: 'Perfect Shawls for Autumn',                 img: 'https://cdn.wizcommerce.com/assets/7f02fef4-5ab8-4ad4-9c82-690e3a5c1de3.png' },
+  { name: 'Pinpoint Style Shirts',                     img: 'https://cdn.wizcommerce.com/assets/5323ef36-ec45-4ac4-935f-b0bc1b9161f9.png' },
+  { name: 'Ponchos for Autumn and Winter',             img: 'https://cdn.wizcommerce.com/assets/a00b63ca-8496-40bf-9265-662958f2282e.png' },
+  { name: 'Satin Gourmet Popcorn Shirts',              img: 'https://cdn.wizcommerce.com/assets/4dac5e5e-4ae5-4c16-9811-f995b9e0de53.png' },
+  { name: 'Satin Mini Pleats',                         img: 'https://cdn.wizcommerce.com/assets/c6a86f17-2cfd-4f71-a716-923f9c3057b6.png' },
+  { name: 'Scarves with Magnetic Clasps',              img: 'https://cdn.wizcommerce.com/assets/87f58ee5-b62a-48a2-8f36-2ff7c6208758.png' },
+  { name: 'Shanghai Beaded Tops and Scarves',          img: 'https://cdn.wizcommerce.com/assets/e271c922-8d6e-4ef3-8a06-b09f0fa7b4ff.png' },
+  { name: 'Silky Dress Scarves and Button Styles',     img: 'https://cdn.wizcommerce.com/assets/1b7d8c2a-e614-45b2-a9dd-4394a85e4391.png' },
+  { name: 'Slinky Travel Tops',                        img: 'https://cdn.wizcommerce.com/assets/790ff03c-61b3-424c-8708-5ce29a46ce59.png' },
+  { name: 'Special Prices for Members',                img: 'https://cdn.wizcommerce.com/assets/a32e16cc-75df-4842-87c6-ae2b93189aba.png' },
+  { name: 'Spike Design Shirts',                       img: 'https://cdn.wizcommerce.com/assets/c65a351f-d3ef-42b2-95ce-ede3cff87adb.png' },
+  { name: 'Spring Special - 30% OFF',                  img: 'https://cdn.wizcommerce.com/assets/807f728a-d6ca-4b2c-982e-b4593af1335d.png' },
+  { name: 'Square Scarves',                            img: 'https://cdn.wizcommerce.com/assets/0d6c6f44-5113-4aec-bc0e-900828e0101f.png' },
+  { name: 'Tees and Tops',                             img: 'https://cdn.wizcommerce.com/assets/8a585d7b-cdf9-4948-a5ef-8f51afcf97cd.png' },
+  { name: 'Western Designs',                           img: 'https://cdn.wizcommerce.com/assets/f1f2c04d-0a0d-4ace-9657-607a5a3f88ff.png' },
+  { name: 'Winter Ponchos - Faux Fur and Fur Trim',    img: 'https://cdn.wizcommerce.com/assets/3f44987b-3d9c-4c13-835d-a6d9dd10f44a.png' }
+];
+
+// Slugify a category tree name — take the LEAF, lowercase, keep alphanumerics, replace runs
+// of non-alphanumerics with a single dash, trim edge dashes.
+function _wcCatSlug(fullName) {
+  const leaf = String(fullName).split('>').pop().trim();
+  return leaf.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// Replace the auto-generated CATALOG with the 110-entry client list so the Full Catalog grid
+// on the home page renders every real category with the correct WC CDN artwork.
+function _installFullCatalog() {
+  if (typeof CATALOG === 'undefined' || !Array.isArray(CATALOG)) return;
+  const seenSlugs = new Set();
+  const NEW = WC_FULL_CATALOG_LIST.map((row, i) => {
+    const displayName = row.name.split('>').pop().trim();
+    let slug = _wcCatSlug(row.name);
+    // Guarantee slug uniqueness — nested tree entries with the same leaf name get a suffix.
+    let unique = slug, n = 2;
+    while (seenSlugs.has(unique)) { unique = slug + '-' + (n++); }
+    seenSlugs.add(unique);
+    return { slug: unique, id: 900 + i, name: displayName, img: row.img, count: 0, tree: row.name };
+  });
+  CATALOG.length = 0;
+  NEW.forEach(c => CATALOG.push(c));
 }
 
 function renderFeaturedItems() {
@@ -9711,8 +10071,10 @@ window.addEventListener('hashchange', route);
 document.addEventListener('DOMContentLoaded', async () => {
   // Load real WC data BEFORE first paint so all rails render with real products.
   await loadWizCommerceData();
+  // Client rev: override the loader-generated CATALOG with the full 110-entry list.
+  _installFullCatalog();
 
-  renderSeasonalPicks();       // seasonal picks rail (uses real WC categories)
+  renderSeasonalPicks();       // seasonal picks rail (4 collections)
   renderSeasonal();
   renderCatalogGrid('catalogGrid');
   renderCatalogGrid('catalogGrid2');
