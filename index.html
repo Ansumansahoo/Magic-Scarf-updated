@@ -5279,9 +5279,12 @@ h1 em, h2 em { font-style: italic; color: var(--c-ink); font-weight: 400; }
 .cat-tile-name { display: none; }
 /* Preserve accessibility: aria-label on <a> still announces the category name for screen readers */
 
-/* Hero — cleaner overlays, modern editorial framing */
-.hero-full { min-height: 640px; height: calc(100dvh - var(--top-sticky)); }
-@media (max-width: 760px) { .hero-full { min-height: 520px; } }
+/* Hero — cleaner overlays, modern editorial framing.
+   Client rev: hero container now sizes to the source image aspect (~2.6:1) so heads
+   don't get cropped when the viewport is taller than the image proportion. Falls back
+   to viewport height only if the aspect would make the hero uncomfortably short. */
+.hero-full { min-height: 520px; height: auto; aspect-ratio: 2.6 / 1; max-height: calc(100dvh - var(--top-sticky)); background: #f5efe4; }
+@media (max-width: 760px) { .hero-full { min-height: 480px; aspect-ratio: 4 / 5; } }
 .hero-full__shade { background: linear-gradient(180deg, transparent 0%, transparent 55%, rgba(15,14,16,.28) 78%, rgba(15,14,16,.55) 100%); }
 .hero-full__caption { background: rgba(15,14,16,.6); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(12px); font-size: 11px; letter-spacing: .08em; }
 .hero-full__dots li { width: 22px; height: 2px; border-radius: 0; background: rgba(255,255,255,.35); transition: background .25s ease; }
@@ -5520,8 +5523,9 @@ h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400; }
 /* Legacy header .btn-account and .search-pill hidden in AccuSharp layout — replaced */
 .header-as .btn-account,
 .header-as .search-pill,
-.header-as .header-faire,
-.header-as .history-btn { display: none !important; }
+.header-as .header-faire { display: none !important; }
+/* Client rev: Order History icon is now surfaced in the header actions cluster. */
+.header-as .header-as-actions .history-btn { display: inline-flex !important; }
 
 /* PROMO STRIP — the "Sharpen Knives..." line, sits BELOW the header (not above) */
 .promo-strip {
@@ -5594,9 +5598,8 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
 @media (max-width: 1100px) { .seasonal-picks .cat-rail { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 760px)  { .seasonal-picks .cat-rail { grid-template-columns: repeat(2, 1fr); gap: 16px 12px; } }
 
-/* Home Full Catalog rail — 5 tiles per row, wraps to as many rows as needed (110 categories total) */
-#seasonalRail.cat-rail { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px 20px; }
-@media (max-width: 1300px) { #seasonalRail.cat-rail { grid-template-columns: repeat(4, 1fr); } }
+/* Home Full Catalog rail — 4 tiles per row × 3 rows = 12 curated headline categories (matches Ralph's mockup grid) */
+#seasonalRail.cat-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px 24px; }
 @media (max-width: 1100px) { #seasonalRail.cat-rail { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 760px)  { #seasonalRail.cat-rail { grid-template-columns: repeat(2, 1fr); gap: 16px 12px; } }
 
@@ -5615,8 +5618,8 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
   grid-template-columns: 5fr 6fr;
   gap: 72px;
   align-items: center;
-  max-width: 1180px;
-  margin: 0 auto;
+  max-width: none;                        /* client rev: inherit container width for consistent side gutters */
+  margin: 0;
 }
 @media (max-width: 900px) {
   .faire-section { padding: 36px 0; }
@@ -5911,6 +5914,22 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
   line-height: 1.45;
 }
 @media (max-width: 820px) { .newsletter-v2__figure { min-height: 260px; aspect-ratio: 16/9; } }
+
+/* Client rev: gradient variant — no photo, brand-palette gradient instead.
+   Layered radial highlights give the surface subtle depth so the mark centers cleanly. */
+.newsletter-v2__figure--gradient {
+  background:
+    radial-gradient(60% 70% at 25% 30%, rgba(255,216,177,.35) 0%, transparent 65%),
+    radial-gradient(50% 60% at 80% 80%, rgba(74,18,32,.55) 0%, transparent 70%),
+    linear-gradient(135deg, #6E1B31 0%, #8B2942 40%, #A8895A 78%, #E8D5B8 100%);
+}
+.newsletter-v2__figure--gradient::after {
+  background: linear-gradient(180deg, transparent 0%, rgba(15,14,16,.18) 100%);
+}
+.newsletter-v2__figure--gradient .newsletter-v2__figure-mark {
+  left: 32px; right: 32px; bottom: 32px;
+  top: auto;                              /* keep the mark anchored bottom-left as before */
+}
 
 /* RIGHT — form column, generous padding, cream/paper background for warmth */
 .newsletter-v2__form-wrap {
@@ -6292,6 +6311,90 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 .catalog-tile:hover .catalog-tile-img, .cat-tile:hover .cat-tile-img { transform: none !important; box-shadow: none !important; }
 .faire-list__item:hover { padding-left: 28px; background: transparent; }
 
+/* ============================================================================
+   CLIENT REV — Faire "Follow this Link + QR code" block (per Ralph's mockup):
+   Full-width card that spans the same grid width as the Faire section above.
+   Left: eyebrow label + big URL + italic scan hint. Right: QR code in a bordered
+   frame. Sits inside the Faire section, styled to feel like a unified extension.
+   ============================================================================ */
+.faire-qr-block {
+  margin: 44px 0 0;
+  max-width: none;                                  /* client rev: inherit container width */
+  padding: 36px 48px;
+  background: #fff;
+  border: 1px solid var(--c-line, #e5dfd5);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(15,14,16,.05);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 48px;
+}
+.faire-qr-block__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+.faire-qr-block__label {
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-primary, #6E1B31);
+}
+.faire-qr-block__url {
+  font-family: var(--f-display, 'Fraunces', serif);
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 500;
+  letter-spacing: -.005em;
+  color: var(--c-ink, #0f0e10);
+  text-decoration: none;
+  border-bottom: 2px solid var(--c-primary, #6E1B31);
+  padding-bottom: 4px;
+  transition: color .2s ease;
+  word-break: break-word;
+  line-height: 1.1;
+}
+.faire-qr-block__url:hover { color: var(--c-primary, #6E1B31); }
+.faire-qr-block__hint {
+  font-family: var(--f-display, 'Fraunces', serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--c-ink-soft, #4a4547);
+  letter-spacing: .01em;
+  margin-top: 2px;
+}
+.faire-qr-block__qr {
+  flex-shrink: 0;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--c-line, #e5dfd5);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15,14,16,.06);
+}
+.faire-qr-block__qr img {
+  display: block;
+  width: 160px;
+  height: 160px;
+}
+
+@media (max-width: 900px) {
+  .faire-qr-block {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 28px 24px;
+    gap: 24px;
+    justify-items: center;
+  }
+  .faire-qr-block__text { align-items: center; }
+}
+@media (max-width: 640px) {
+  .faire-qr-block__qr img { width: 140px; height: 140px; }
+  .faire-qr-block__url { font-size: 24px; }
+}
+
 /* --- Header polish: sticky scrolled state ONLY. Header dimensions come from the AccuSharp block above so the enlarged logo has room. --- */
 :root { --h-promo: 40px; }
 @media (max-width: 760px) { :root { --h-promo: 62px; } }
@@ -6570,6 +6673,183 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 .cat-tile img, .catalog-tile img { transition: transform .8s var(--ease-out, ease); }
 .cat-tile:hover img, .catalog-tile:hover img { transform: scale(1.05); }
 
+/* ============================================================================
+   CLIENT REV — Best Sellers SLIDING CAROUSEL (per Ralph's mockup):
+   Multi-slide auto-advancing carousel with dots. Same visual treatment as the
+   single-banner variant but with a horizontal track and slide indicators.
+   ============================================================================ */
+.bestsellers-promo { padding: 32px 0; }
+.bestsellers-carousel {
+  position: relative;
+  width: 100%;
+  max-width: none;                        /* client rev: fills the parent .container for consistent side gutters */
+  margin: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 2.6 / 1;
+  background: #f3ede2;
+  box-shadow: 0 10px 40px rgba(15,14,16,.10);
+}
+.bestsellers-carousel__track {
+  list-style: none; margin: 0; padding: 0;
+  display: flex;
+  width: 100%; height: 100%;
+  transition: transform .7s cubic-bezier(.22,.61,.36,1);
+}
+.bestsellers-carousel__track > li {
+  flex: 0 0 100%;
+  position: relative;
+  height: 100%;
+}
+.bestsellers-promo__banner {
+  position: absolute; inset: 0;
+  display: block;
+  color: #fff;
+  text-decoration: none;
+}
+.bestsellers-promo__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+/* Client rev: image-less slide backdrop — the inline `background` on this element is
+   the multi-stop gradient supplied per slide. A soft radial highlight adds depth. */
+.bestsellers-promo__bg {
+  position: absolute; inset: 0;
+  background-blend-mode: normal;
+}
+.bestsellers-promo__bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 80% at 25% 40%, rgba(255,255,255,.14) 0%, transparent 65%),
+    radial-gradient(50% 60% at 80% 75%, rgba(0,0,0,.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.bestsellers-promo__overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+  padding: 40px 56px;
+  color: #fff;
+}
+.bestsellers-promo__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-accent, #dbb684);
+  margin-bottom: 12px;
+}
+.bestsellers-promo__title {
+  font-family: var(--f-display, 'Fraunces', serif);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  margin: 0 0 12px;
+}
+.bestsellers-promo__title em { font-style: italic; color: #ffd8b1; font-weight: 400; }
+.bestsellers-promo__note { font-size: 15px; line-height: 1.45; margin: 0 0 18px; max-width: 460px; }
+.bestsellers-promo__badge {
+  display: inline-block;
+  background: var(--c-primary, #6E1B31);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.bestsellers-promo__cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px;
+  background: #fff;
+  color: var(--c-ink, #0f0e10);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: .02em;
+}
+.bestsellers-promo__cta svg { transition: transform .25s ease; }
+.bestsellers-promo__banner:hover .bestsellers-promo__cta svg { transform: translateX(3px); }
+.bestsellers-carousel__dots {
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+  list-style: none; margin: 0; padding: 0;
+  display: flex; gap: 8px;
+  z-index: 3;
+}
+.bestsellers-carousel__dots li {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.55);
+  cursor: pointer;
+  transition: background-color .25s ease, transform .25s ease;
+  outline: none; border: 0;
+}
+.bestsellers-carousel__dots li.is-active { background: #fff; transform: scale(1.35); }
+.bestsellers-carousel__dots li:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media (max-width: 900px) {
+  .bestsellers-carousel { aspect-ratio: 16/10; }
+  .bestsellers-promo__overlay { padding: 24px 28px; background: linear-gradient(180deg, rgba(15,14,16,.35), rgba(15,14,16,.55)); }
+}
+
+/* ============================================================================
+   CLIENT REV — Customer Reviews block (per client mockup):
+   Two-column: editorial photo left · story + reviews CTA right.
+   ============================================================================ */
+.reviews-block { background: #fdfaf3; }
+.reviews-block__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  max-width: none;                        /* client rev: inherit container width for consistent side gutters */
+  margin: 0;
+}
+@media (max-width: 900px) {
+  .reviews-block__grid { grid-template-columns: 1fr; gap: 32px; }
+}
+.reviews-block__figure {
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background: var(--c-surface, #f3ede2);
+  box-shadow: 0 12px 40px rgba(15,14,16,.10);
+}
+.reviews-block__figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.reviews-block__eyebrow {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-primary, #6E1B31);
+  margin-bottom: 14px;
+}
+.reviews-block__title {
+  font-family: var(--f-display, 'Fraunces', serif);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  color: var(--c-ink, #0f0e10);
+  margin: 0 0 16px;
+}
+.reviews-block__lead {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--c-ink-soft, #4a4547);
+  margin: 0 0 18px;
+  max-width: 520px;
+}
+.reviews-block__signature {
+  font-family: var(--f-display, 'Fraunces', serif);
+  font-style: italic;
+  color: var(--c-primary, #6E1B31);
+  font-size: 15px;
+  margin: 0 0 24px;
+}
+.reviews-block__cta { min-height: 48px; padding: 0 24px; font-size: 14px; }
+
 /* Newsletter polish — perks moved above form + burgundy subscribe button */
 .newsletter-v2__perks {
   order: -1;               /* reordered above the form via flex */
@@ -6704,8 +6984,13 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
           <span class="badge" id="cartBadge">0</span>
         </a>
 
+        <!-- Order History (client rev) — quick access to previous orders for returning buyers. -->
+        <a class="iconbtn history-btn hide-mobile" href="#/order-tracking" aria-label="Order history" title="Order history">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
+        </a>
+
         <!-- Favorites (kept from prior rev — quick save-for-later access) -->
-        <a class="iconbtn favorites-btn hide-mobile" href="#/account/favorites" aria-label="My favorites">
+        <a class="iconbtn favorites-btn hide-mobile" href="#/account/favorites" aria-label="My favorites" title="My favorites">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           <span class="badge" id="favBadge" style="display:none">0</span>
         </a>
@@ -6824,41 +7109,48 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
   <!-- Client rev: FEATURED COLLECTION (Cashmere-Feel signature) removed from home per feedback. -->
 
 
-  <!-- NEW: SEASONAL PICKS — configurable, refreshed each season (client rev).
-       Data-driven from window.SEASONAL_PICKS (see JS block) — swap the config
-       for Fall / Winter / Holiday collections without touching markup. -->
+  <!-- 2. MAJOR LINKS — 4 collection tiles (Best Picks · New Arrivals · Coming Soon · Discounted Items).
+       Section title matches client's mockup: "The Seasons Change and So do we". -->
   <section class="section section-tight seasonal-picks reveal">
     <div class="container">
-      <!-- Client rev: heading + subtitle center-aligned, CTA repositioned below -->
       <div class="section-head section-head--center">
-        <span class="eyebrow" id="seasonalEyebrow">Magic Scarf Signature Items</span>
-        <h2 id="seasonalTitle">Signature Collections — hand-picked for this season.</h2>
-        <p class="editor-note" id="seasonalNote" style="font-family:var(--ff-display); font-style:italic; color:var(--c-ink-soft); font-size: 1.0625rem; margin: 8px auto 0; max-width: 640px;">The pieces that define the Magic Scarf line — reordered season after season by boutique buyers nationwide.</p>
-        <div class="section-head__cta">
-          <a href="#/c/best-picks" class="btn btn-outline btn-icon-r btn-sm">Shop the Season
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
-        </div>
+        <span class="eyebrow" id="seasonalEyebrow">Magic Scarf</span>
+        <h2 id="seasonalTitle">The Seasons Change and So do we.</h2>
+        <p class="editor-note" id="seasonalNote" style="font-family:var(--ff-display); font-style:italic; color:var(--c-ink-soft); font-size: 1.0625rem; margin: 8px auto 0; max-width: 640px;">Fresh drops each Tuesday — jump straight to the collection that's moving right now.</p>
       </div>
       <div class="cat-rail reveal-stagger" id="seasonalPicksRail"></div>
     </div>
   </section>
 
-  <!-- 4. FULL CATALOG — 17 categories (moved BELOW Seasonal Picks per client rev) -->
-  <section class="section section-cream">
+  <!-- 3. BEST SELLERS SLIDING CAROUSEL — wrapped in .container so left/right gutters
+       align with every other section on the page. -->
+  <section class="section section-tight bestsellers-promo reveal" aria-label="This week's best sellers" aria-roledescription="carousel">
     <div class="container">
-      <!-- Client rev: heading + subtitle center-aligned, CTA repositioned below -->
-      <div class="section-head section-head--center reveal">
-        <span class="eyebrow">The Full Catalog</span>
-        <h2>Every category in the line.</h2>
-        <p class="editor-note" style="font-family:var(--ff-display); font-style:italic; color:var(--c-ink-soft); font-size: 1.0625rem; margin: 8px auto 0; max-width: 640px;">Every category in the Magic Scarf line, restocked weekly from our California warehouse.</p>
-        <div class="section-head__cta">
-          <a href="#/catalog" class="btn btn-outline btn-icon-r btn-sm">View Full Catalog
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      <div class="bestsellers-carousel" id="bestSellersCarousel">
+        <ul class="bestsellers-carousel__track" id="bestSellersTrack"></ul>
+        <ol class="bestsellers-carousel__dots" id="bestSellersDots" role="tablist" aria-label="Best sellers slide indicators"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. REVIEWS / STORY — Client mockup: "Adding customer reviews will have great impact"
+       Two-column: editorial photo left · story + reviews CTA right. -->
+  <section class="section reviews-block reveal" aria-label="Why boutiques choose Magic Scarf">
+    <div class="container">
+      <div class="reviews-block__grid">
+        <figure class="reviews-block__figure">
+          <img src="https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1281.main.jpg" alt="Magic Scarf editorial — two friends styling shawls in California autumn light" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1290.main.jpg'">
+        </figure>
+        <div class="reviews-block__copy">
+          <span class="reviews-block__eyebrow">Designed in California · Since 2003</span>
+          <h2 class="reviews-block__title">Built for the way wholesale actually works.</h2>
+          <p class="reviews-block__lead">Half-price shipping. 50% Net-30 terms for approved retailers, and a warehouse that ships in 24 hours. We answer the phone. We restock weekly. We're the wholesale partner you'd build a boutique around.</p>
+          <p class="reviews-block__signature">— The Magic Scarf Team</p>
+          <a href="https://www.faire.com/direct/magicscarf" target="_blank" rel="noopener" class="btn btn-outline btn-icon-r reviews-block__cta">See our Reviews
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
         </div>
       </div>
-      <div class="cat-rail reveal-stagger" id="seasonalRail"></div>
     </div>
   </section>
 
@@ -6876,9 +7168,9 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
     <div class="container">
       <div class="faire-section__grid">
         <div class="faire-section__copy">
-          <span class="faire-section__eyebrow">Also on Faire <span class="faire-section__dash">—</span></span>
-          <h2 class="faire-section__title">Prefer to shop us <em>on Faire?</em></h2>
-          <p class="faire-section__lead">Every Magic Scarf SKU is available inside the Faire marketplace as an alternative to ordering direct — Net-60 terms, free returns on your first order, and one login for every brand you already carry.</p>
+          <span class="faire-section__eyebrow">Meet Magic Scarf on Faire <span class="faire-section__dash">—</span></span>
+          <h2 class="faire-section__title">Shop thousands of brands on <em>one website</em>.</h2>
+          <p class="faire-section__lead">Every Magic Scarf SKU is also available inside Faire — here's what boutique buyers get on the platform.</p>
           <a href="#/faire" class="btn btn-primary btn-icon-r faire-section__cta">Visit Our Faire Store
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
@@ -6887,51 +7179,85 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
           <li class="faire-list__item">
             <span class="faire-list__num" aria-hidden="true">01</span>
             <div class="faire-list__body">
-              <h3 class="faire-list__title">Net-60 Terms</h3>
-              <p class="faire-list__desc">Built-in trade financing on every approved order.</p>
-            </div>
-            <span class="faire-list__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </span>
-          </li>
-          <li class="faire-list__item">
-            <span class="faire-list__num" aria-hidden="true">02</span>
-            <div class="faire-list__body">
-              <h3 class="faire-list__title">Free Returns</h3>
-              <p class="faire-list__desc">Risk-free on every first-time order with a Faire brand.</p>
+              <h3 class="faire-list__title">Risk-Free Returns</h3>
+              <p class="faire-list__desc">Retailers get free returns on their very first order with any new brand. This allows you to test new products with your customers without the financial risk of getting stuck with unsold inventory.</p>
             </div>
             <span class="faire-list__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6 9 17l-5-5"/></svg>
             </span>
           </li>
           <li class="faire-list__item">
-            <span class="faire-list__num" aria-hidden="true">03</span>
+            <span class="faire-list__num" aria-hidden="true">02</span>
             <div class="faire-list__body">
-              <h3 class="faire-list__title">One Login</h3>
-              <p class="faire-list__desc">Combine SKUs from every Faire brand you carry in one cart.</p>
+              <h3 class="faire-list__title">Buy Now, Pay Later</h3>
+              <p class="faire-list__desc">Faire offers Net-60 payment terms for qualifying buyers. You can order and stock inventory now and pay up to 60 days later, interest-free.</p>
             </div>
             <span class="faire-list__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </span>
+          </li>
+          <li class="faire-list__item">
+            <span class="faire-list__num" aria-hidden="true">03</span>
+            <div class="faire-list__body">
+              <h3 class="faire-list__title">Access to Unique Brands</h3>
+              <p class="faire-list__desc">You gain access to a massive catalog of independent, eco-friendly, women-owned, and local brands that you might not find through traditional wholesale channels or trade shows.</p>
+            </div>
+            <span class="faire-list__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18M3 12h18"/></svg>
             </span>
           </li>
         </ol>
+      </div>
+
+      <!-- Client rev (Ralph's mockup): Follow this Link + QR code block below the Faire grid.
+           Encourages retailers to open Faire on their phone / scan-and-shop. -->
+      <div class="faire-qr-block reveal">
+        <div class="faire-qr-block__text">
+          <span class="faire-qr-block__label">Follow this Link:</span>
+          <a class="faire-qr-block__url" href="https://www.faire.com/direct/magicscarf" target="_blank" rel="noopener">magicscarf.faire.com</a>
+          <span class="faire-qr-block__hint">or Scan the QR Code to join Faire</span>
+        </div>
+        <div class="faire-qr-block__qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=2&data=https%3A%2F%2Fwww.faire.com%2Fdirect%2Fmagicscarf"
+               alt="QR code — scan to open magicscarf.faire.com"
+               width="180" height="180" loading="lazy" decoding="async">
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Client rev: CONNECT section (Three ways to connect) removed from home per feedback. -->
 
+  <!-- 6. FULL CATALOG — moved to just above the Newsletter/footer per client mockup.
+       Every category tile with real WC CDN artwork, 5-per-row grid. -->
+  <section class="section section-cream">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="eyebrow">The Full Catalog</span>
+        <h2>Every category in the line.</h2>
+        <p class="editor-note" style="font-family:var(--ff-display); font-style:italic; color:var(--c-ink-soft); font-size: 1.0625rem; margin: 8px auto 0; max-width: 640px;">Every category in the Magic Scarf line, restocked weekly from our California warehouse.</p>
+        <div class="section-head__cta">
+          <a href="#/catalog" class="btn btn-outline btn-icon-r btn-sm">View Full Catalog
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="cat-rail reveal-stagger" id="seasonalRail"></div>
+    </div>
+  </section>
 
   <!-- 7. NEWSLETTER — Client rev: cleaner split-card design (image left, form right). -->
   <section class="section newsletter-v2 reveal">
     <div class="container">
       <div class="newsletter-v2__card">
-        <!-- LEFT: editorial image with a soft cream scrim + brand mark -->
-        <div class="newsletter-v2__figure">
-          <img src="https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1281.main.jpg" alt="Magic Scarf editorial photography — Satin Charmeuse Button Shawls" loading="lazy" decoding="async">
+        <!-- LEFT: brand-palette gradient panel (no image) with the brand mark centered.
+             Client rev: replaced the editorial photo with a burgundy → gold → cream gradient
+             so the newsletter side reads as a distinct visual block rather than duplicating
+             photography used elsewhere on the page. -->
+        <div class="newsletter-v2__figure newsletter-v2__figure--gradient">
           <div class="newsletter-v2__figure-mark" aria-hidden="true">
             <span class="newsletter-v2__figure-eyebrow">Magic Scarf</span>
-            <span class="newsletter-v2__figure-mark-line">The Look Book</span>
+            <span class="newsletter-v2__figure-mark-line">Newsletter</span>
             <span class="newsletter-v2__figure-note">A weekly editorial mailer for wholesale buyers.</span>
           </div>
         </div>
@@ -6942,7 +7268,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             Subscribe · Trade only
           </span>
-          <h2 class="newsletter-v2__title">Join <em>The Look Book</em>.</h2>
+          <h2 class="newsletter-v2__title">Join our <em>Newsletter</em>.</h2>
           <p class="newsletter-v2__lead">One short email each Tuesday — new arrivals, restocked colors, and upcoming trade-show dates.</p>
 
           <form class="newsletter-v2__form"
@@ -7712,7 +8038,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
       <!-- Client rev: Newsletter wired to Constant Contact. Replace CC_ACCOUNT_ID + CC_LIST_ID with real values.
            Submits to Constant Contact's SignUpAction endpoint — POST fields match their embedded-form spec. -->
       <div class="footer-col footer-news">
-        <h5>The Look Book</h5>
+        <h5>Newsletter</h5>
         <p>One short email each Tuesday with the week's restocks, new colors, and trade-show dates. Trade only.</p>
         <form class="footer-news-form"
               action="https://visitor2.constantcontact.com/api/signup"
@@ -7721,11 +8047,11 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
               onsubmit="return handleNewsletterSubmit(this, event)">
           <!-- Constant Contact hidden fields — set these once from client's CC dashboard -->
           <input type="hidden" name="ca"        value="CC_ACCOUNT_ID">    <!-- Constant Contact account id -->
-          <input type="hidden" name="list"      value="CC_LIST_ID">       <!-- The Look Book list id -->
+          <input type="hidden" name="list"      value="CC_LIST_ID">       <!-- Newsletter list id -->
           <input type="hidden" name="source"    value="magicscarf-footer">
           <input type="hidden" name="required"  value="ea">
           <input id="footer-news-email" name="ea" type="email" placeholder="boutique@example.com" aria-label="Email address" required autocomplete="email" inputmode="email">
-          <button type="submit" aria-label="Subscribe to The Look Book">
+          <button type="submit" aria-label="Subscribe to the Newsletter">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </form>
@@ -8026,9 +8352,9 @@ async function loadWizCommerceData() {
       // ---- Update SEASONAL_PICKS to use real top-level categories ----
       window.SEASONAL_PICKS = window.SEASONAL_PICKS || {};
       window.SEASONAL_PICKS.slugs = topLevel.slice(0, 8).map(c => c.slug);
-      window.SEASONAL_PICKS.eyebrow = "This Season's Picks";
-      window.SEASONAL_PICKS.title   = "Curated from the WizCommerce catalog.";
-      window.SEASONAL_PICKS.note    = `${data.meta.total_products} products across ${data.meta.total_categories} categories, restocked weekly.`;
+      window.SEASONAL_PICKS.eyebrow = "Magic Scarf";
+      window.SEASONAL_PICKS.title   = "The Seasons Change and So do we.";
+      window.SEASONAL_PICKS.note    = "Fresh drops each Tuesday — jump straight to the collection that's moving right now.";
 
       console.log('[WC] Loaded', data.meta.total_products, 'products,', data.meta.total_categories, 'categories,', data.meta.total_variants, 'variants');
       return data;
@@ -8106,7 +8432,7 @@ const HERO_IMAGES = [
     title: '#5098 Floral Print Kimonos',
     bullets: ['Ultra Soft Cotton Touch', 'Bold Multi Prints', 'Lightweight for Warm Weather', 'One Size fits Most'],
     caption: '#5098 Floral Print Kimonos',
-    align: 'left', pos: '75% 50%',
+    align: 'left', pos: '75% 0%',
     cta:  { label: 'Shop the Look',          href: '#/c/capes-coverups-vests' } },
 
   { src: 'https://directus-g-p.sourcerer.tech/assets/1f19baa0-29ff-42a9-82f9-d096d2b5dc62',
@@ -8114,21 +8440,21 @@ const HERO_IMAGES = [
     subtitle: '1C15 Light Knit Ruanas',
     bullets: ['A Standout Design for All Occasions'],
     caption: '1C15 Light Knit Ruanas — Summer Elegance',
-    align: 'left', pos: '75% 50%',
+    align: 'left', pos: '75% 0%',
     cta:  { label: 'Shop the Look',          href: '#/c/capes-coverups-vests' } },
 
   { src: 'https://directus-g-p.sourcerer.tech/assets/269cddf3-88d4-4c9f-ade2-0384803f9ce1',
     title: 'A Touch of Victorian Spice',
     bullets: ['Oblong and Infinity Styles'],
     caption: 'A Touch of Victorian Spice',
-    align: 'left', pos: '65% 50%',
+    align: 'left', pos: '65% 0%',
     cta:  { label: 'Shop the Look',          href: '#/c/scarves-shawls' } },
 
   { src: 'https://directus-g-p.sourcerer.tech/assets/9cedfb7f-84e2-41bf-9c61-4d052bb3d3ff',
     title: '#3850 Island Kimonos',
     bullets: ['Casual Textured Crepe', 'Structured Design', 'Perfect for a stroll by the sea', 'One Size Fit'],
     caption: '#3850 Island Kimonos',
-    align: 'left', pos: '75% 50%',
+    align: 'left', pos: '75% 0%',
     cta:  { label: 'Shop the Look',          href: '#/c/capes-coverups-vests' } },
 
   { src: 'https://directus-g-p.sourcerer.tech/assets/a99ce7df-b168-4343-ab50-6f667cc66244',
@@ -8136,7 +8462,7 @@ const HERO_IMAGES = [
     subtitle: 'for Many Reasons',
     bullets: [],
     caption: 'A Poncho for All Seasons',
-    align: 'left', pos: '75% 50%',
+    align: 'left', pos: '75% 0%',
     cta:  { label: 'Shop the Look',          href: '#/c/ponchos' } },
 
   { src: 'https://directus-g-p.sourcerer.tech/assets/64814f51-5beb-4fd7-a8ef-095a5dfb713a',
@@ -8144,7 +8470,7 @@ const HERO_IMAGES = [
     subtitle: 'Six Button Ponchos',
     bullets: ['Light Mesh with Natural Shell Buttons'],
     caption: 'New Arrival #3970 — Six Button Ponchos',
-    align: 'left', pos: '75% 50%',
+    align: 'left', pos: '75% 0%',
     cta:  { label: 'Shop the Look',          href: '#/c/ponchos' } },
 
   { src: 'https://directus-g-p.sourcerer.tech/assets/0dc8b33a-f795-4dcd-88c2-ccb90bf5e1ca',
@@ -8152,7 +8478,7 @@ const HERO_IMAGES = [
     subtitle: 'Ready to Go',
     bullets: [],
     caption: 'New Magnetic Brooches — Ready to Go',
-    align: 'left', pos: '75% 50%',
+    align: 'left', pos: '75% 0%',
     cta:  { label: 'Shop the Look',          href: '#/c/accessories' } }
 ];
 const HERO_IMAGE_URLS = HERO_IMAGES.map(h => h.src);
@@ -8419,12 +8745,35 @@ function renderCatalogGrid(targetId) {
   `;}).join('');
 }
 
+// Client rev (Ralph's mockup): home Full Catalog rail is CURATED to ~12 top-level
+// headline categories that mirror his hand-drawn boxes. The full 69 categories
+// still show on the /catalog page (renderCatalogGrid) — this filter only applies
+// to the home rail.
+const HOME_CATEGORY_ORDER = [
+  'button-style-scarves-shawls',
+  'capes-coverups-and-vests',
+  'ponchos',
+  'sweaters-sweater-vests',
+  'tees-and-tops',
+  'leggings-and-pants',
+  'skirts-and-dresses',
+  'slinky-vests-and-jackets',
+  'accessories-and-essentials',
+  'art-design-line',
+  'coats-and-jackets',
+  'best-picks-this-week'
+];
+
 function renderSeasonal() {
   const tgt = document.getElementById('seasonalRail');
   if (!tgt) return;
-  // Client rev: home-page Full Catalog rail shows EVERY category in CATALOG (5-per-row grid).
-  // No hover-label or bottom name — the image assets themselves already carry the category label.
-  tgt.innerHTML = CATALOG.map(c => {
+  // Pick the ~12 headline categories in the client's mockup order. Slugs that don't match
+  // any CATALOG entry are silently skipped so the rail never renders blanks.
+  const pickedRaw = HOME_CATEGORY_ORDER.map(s => CATALOG.find(c => c.slug === s));
+  const picked = pickedRaw.filter(Boolean);
+  // Safety fallback: if fewer than 8 tiles matched, top up from CATALOG so the rail still fills.
+  const list = picked.length >= 8 ? picked : picked.concat(CATALOG.filter(c => !HOME_CATEGORY_ORDER.includes(c.slug)).slice(0, 12 - picked.length));
+  tgt.innerHTML = list.slice(0, 12).map(c => {
     const fallback = 'https://www.magicscarf.com/stores/common_files/categories/category_' + (c.id||'') + '.jpg';
     return `
     <a href="#/c/${c.slug}" class="cat-tile" aria-label="Browse ${c.name}">
@@ -9939,6 +10288,76 @@ function _installFullCatalog() {
   NEW.forEach(c => CATALOG.push(c));
 }
 
+// Client rev: Best Sellers sliding carousel — auto-advances every 6 seconds
+// through 4 promotional slides. Client will supply real hero imagery later;
+// for now each slide uses a hand-tuned multi-stop gradient tied to the brand palette.
+const BEST_SELLERS_SLIDES = [
+  { bg: 'linear-gradient(135deg, #6E1B31 0%, #A8895A 45%, #EEDFC8 100%)',
+    eyebrow: "This Week's Best Sellers", title: 'Signature <em>Cover-ups</em>',
+    note: 'Retailer favorites, restocked and ready to ship.',
+    badge: 'Up to 25% Off', cta: 'Click to View', href: '#/c/capes-coverups-and-vests' },
+  { bg: 'linear-gradient(120deg, #4A1220 0%, #6E1B31 40%, #C79D6E 100%)',
+    eyebrow: 'Now Shipping', title: 'Ponchos for <em>Autumn & Winter</em>',
+    note: 'The signature Magic Scarf silhouette — 47 colorways in stock.',
+    badge: 'Best Sellers', cta: 'Shop Ponchos', href: '#/c/ponchos' },
+  { bg: 'linear-gradient(135deg, #3E4A38 0%, #7B8F6B 50%, #E6DDC3 100%)',
+    eyebrow: 'Fresh Drop', title: 'New Arrivals <em>FW 2026</em>',
+    note: 'This season\'s new prints, weights, and silhouettes — hand-picked for boutiques.',
+    badge: 'Just In', cta: 'Shop New Arrivals', href: '#/c/new-arrivals' },
+  { bg: 'linear-gradient(120deg, #A8895A 0%, #D4B98C 45%, #F3E9D3 100%)',
+    eyebrow: 'Buyer Favorite', title: 'Button-Style <em>Scarves & Shawls</em>',
+    note: 'The wearable accessory your customers reorder every season.',
+    badge: 'Reordered Weekly', cta: 'Shop the Style', href: '#/c/button-style-scarves-shawls' }
+];
+window.__bsIdx  = 0;
+window.__bsAuto = null;
+function renderBestSellers() {
+  const track = document.getElementById('bestSellersTrack');
+  const dots  = document.getElementById('bestSellersDots');
+  if (!track || !dots) return;
+  track.innerHTML = BEST_SELLERS_SLIDES.map((s, i) => `
+    <li role="group" aria-roledescription="slide" aria-label="Slide ${i+1} of ${BEST_SELLERS_SLIDES.length}" id="bsSlide-${i}">
+      <a href="${s.href}" class="bestsellers-promo__banner" aria-label="${s.cta} — ${s.title.replace(/<[^>]*>/g,'')}">
+        <div class="bestsellers-promo__bg" style="background: ${s.bg}" aria-hidden="true"></div>
+        <div class="bestsellers-promo__overlay">
+          <span class="bestsellers-promo__eyebrow">${s.eyebrow}</span>
+          <h2 class="bestsellers-promo__title">${s.title}</h2>
+          <p class="bestsellers-promo__note">${s.note}</p>
+          <span class="bestsellers-promo__badge">${s.badge}</span>
+          <span class="bestsellers-promo__cta">${s.cta}
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+        </div>
+      </a>
+    </li>
+  `).join('');
+  dots.innerHTML = BEST_SELLERS_SLIDES.map((_, i) => `
+    <li role="tab" tabindex="0" aria-label="Go to slide ${i+1}" aria-controls="bsSlide-${i}"
+        aria-selected="${i===0?'true':'false'}" class="${i===0?'is-active':''}"
+        onclick="bsGoTo(${i})" onkeydown="if(event.key==='Enter')bsGoTo(${i})"></li>
+  `).join('');
+  bsGoTo(0);
+  bsStartAuto();
+}
+function bsGoTo(i) {
+  const total = BEST_SELLERS_SLIDES.length;
+  if (total === 0) return;
+  window.__bsIdx = (i + total) % total;
+  const track = document.getElementById('bestSellersTrack');
+  const dots  = document.getElementById('bestSellersDots');
+  if (track) track.style.transform = 'translate3d(' + (-100 * window.__bsIdx) + '%, 0, 0)';
+  if (dots) [...dots.children].forEach((li, idx) => {
+    const active = (idx === window.__bsIdx);
+    li.classList.toggle('is-active', active);
+    li.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+}
+function bsStartAuto() {
+  if (window.__bsAuto) clearInterval(window.__bsAuto);
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  window.__bsAuto = setInterval(() => bsGoTo(window.__bsIdx + 1), 6000);
+}
+
 function renderFeaturedItems() {
   const wrap = document.getElementById('featuredItemsRail');
   if (!wrap) return;
@@ -10076,6 +10495,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   renderSeasonalPicks();       // seasonal picks rail (4 collections)
   renderSeasonal();
+  renderBestSellers();         // Client rev: multi-slide best sellers carousel
   renderCatalogGrid('catalogGrid');
   renderCatalogGrid('catalogGrid2');
   renderShows('showsGrid', SHOWS);
