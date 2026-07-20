@@ -2727,7 +2727,7 @@ p { margin: 0; }
 .footer .container { position: relative; z-index: 1; }
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.1fr;
+  grid-template-columns: 1.4fr 1fr 1fr;   /* Client rev: 3-column layout (brand + Shop + Company) */
   gap: var(--s-9);
 }
 .footer-news h5 { color: #fff; }
@@ -2788,6 +2788,19 @@ p { margin: 0; }
   display: inline-block;
   letter-spacing: .015em;
 }
+/* Client rev: real logo image in the footer brand column, dark-bg-friendly */
+.footer-brand__link { display: inline-flex; margin-bottom: 16px; }
+.footer-brand__logo {
+  height: 96px;
+  max-width: 280px;
+  width: auto;
+  object-fit: contain;
+  object-position: left center;
+  display: block;
+  filter: brightness(1.05) saturate(1.1);
+}
+@media (max-width: 900px) { .footer-brand__logo { height: 76px; max-width: 220px; } }
+@media (max-width: 760px) { .footer-brand__logo { height: 60px; max-width: 200px; } }
 .footer-brand p {
   color: rgba(255,255,255,.62);
   font-size: var(--fs-sm);
@@ -2902,14 +2915,12 @@ p { margin: 0; }
 .footer-base a:hover { color: #fff; }
 
 @media (max-width: 1100px) {
-  .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--s-8); }
   .footer-brand { grid-column: 1 / -1; }
-  .footer-news { grid-column: 1 / -1; max-width: 480px; }
 }
 @media (max-width: 600px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--s-7); }
+  .footer-grid { grid-template-columns: 1fr; gap: var(--s-7); }
   .footer-brand { grid-column: 1 / -1; }
-  .footer-news { grid-column: 1 / -1; max-width: none; }
 }
 
 /* ===== Breadcrumbs ===== */
@@ -5592,7 +5603,137 @@ html { scroll-padding-top: calc(var(--h-header-as) + var(--h-promo) + 8px); }
    ========================================================================= */
 
 /* Signature Items grid — 8 boxes at desktop, cleanly scaled at every breakpoint */
-/* Client rev: Signature Collections rail is one row of 4 collection tiles (Best Picks, Discount Items, New Arrivals, Coming Soon) */
+/* Client rev (Ralph): compact CTA action strip below the hero — Apply for Wholesale
+   + per-slide Shop this Look. Sits on the page background, off the hero image. */
+.hero-actions { padding: 20px 0 8px; }
+.hero-actions__wrap { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.hero-actions .btn { min-height: 44px; padding: 0 24px; font-size: 14px; }
+
+/* Client rev (Ralph): header search bar — inline input with a leading search icon */
+.header-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 36px;
+  background: #fdfaf3;
+  border: 1px solid var(--c-line, #e5dfd5);
+  border-radius: 999px;
+  min-width: 200px;
+  transition: border-color .18s ease, background-color .18s ease;
+}
+.header-search:focus-within {
+  border-color: var(--c-primary, #6E1B31);
+  background: #fff;
+}
+.header-search__icon { color: var(--c-ink-soft, #4a4547); flex-shrink: 0; }
+.header-search__input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--c-ink);
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.header-search__input::placeholder { color: var(--c-mute, #97918a); font-style: normal; text-transform: uppercase; letter-spacing: .1em; font-weight: 500; }
+.header-search__input::-webkit-search-cancel-button { display: none; }
+@media (max-width: 1280px) { .header-search { min-width: 160px; } }
+@media (max-width: 1100px) { .header-search { min-width: 140px; height: 34px; } }
+@media (max-width: 760px)  { .header-search { display: none; } }   /* search collapses to the drawer on mobile */
+
+/* Client rev (Ralph): match the primary nav's exact typography — UPPERCASE, 13px, .1em
+   letter-spacing, weight 500 — so Sign In / Order History / Favorites read as a family with
+   HOME · CATALOG · NEW ARRIVALS · … */
+.header-text-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  color: var(--c-ink, #0f0e10);
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color .18s ease;
+  white-space: nowrap;
+}
+.header-text-link:hover { color: var(--c-primary, #6E1B31); }
+.header-text-link .badge {
+  min-width: 16px; height: 16px; padding: 0 4px;
+  background: var(--c-primary, #6E1B31); color: #fff;
+  font-size: 10px; font-weight: 700;
+  border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 4px;
+}
+@media (max-width: 1280px) { .header-text-link { font-size: 12px; padding: 6px 4px; letter-spacing: .08em; } }
+@media (max-width: 1100px) {
+  /* Tablet: keep only Sign In as text; Order History + Favorites collapse into the drawer */
+  .header-as .header-text-link:not([id="accountBtn"]) { display: none; }
+}
+@media (max-width: 760px)  {
+  /* Mobile: hide ALL header text links, search bar, and Shop on Faire — only logo, cart, hamburger visible */
+  .header-as .header-text-link { display: none !important; }
+  .header-as .header-search    { display: none !important; }
+  .header-as .btn-buy-now      { display: none !important; }
+  .header-as .menu-toggle      { display: inline-flex !important; }
+  .header-as-actions           { gap: 6px !important; }
+}
+
+/* Compact icon buttons in the header + smaller Shop on Faire pill so the row breathes */
+.header-as-actions { gap: 4px; }
+.header-as-actions .iconbtn { width: 36px; height: 36px; }
+.header-as-actions .iconbtn svg { width: 16px; height: 16px; }
+.header-as .btn-buy-now { padding: 8px 14px !important; font-size: 12.5px; min-height: 36px; letter-spacing: .01em; }
+
+/* Nav — tighten inter-item padding so all 8 items fit alongside the logo width */
+.nav-primary.nav-as a { padding: 6px 10px !important; letter-spacing: .1em !important; font-size: 12.5px; }
+@media (max-width: 1280px) { .nav-primary.nav-as a { padding: 6px 8px !important; font-size: 12px; } }
+
+/* Client rev (Ralph): Phone Orders / Quick Questions bold label on the promo strip */
+.promo-strip__phone { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.promo-strip__phone-label {
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: rgba(255,255,255,.9);
+  font-weight: 500;
+}
+.promo-strip__phone-num {
+  font-weight: 700;
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: .02em;
+}
+@media (max-width: 760px) {
+  .promo-strip__phone-label { display: none; }         /* hide label on mobile to save room */
+}
+
+/* Client rev: italic tagline that appears BELOW each Signature Collections tile,
+   using Ralph's exact wording ("Some items are the best for now" etc.) */
+.cat-tile--with-tag { display: flex; flex-direction: column; }
+.cat-tile__tag {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--f-display, 'Fraunces', serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--c-ink-soft, #4a4547);
+  letter-spacing: .01em;
+}
+.cat-tile--with-tag:hover .cat-tile__tag { color: var(--c-primary, #6E1B31); }
+
+/* Client rev: Signature Collections rail — one row of 4 collection tiles (Best Picks, New Arrivals, Coming Soon, Discounted Items) */
 .seasonal-picks .cat-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 20px; }
 @media (min-width: 1300px) { .seasonal-picks .cat-rail { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 1100px) { .seasonal-picks .cat-rail { grid-template-columns: repeat(2, 1fr); } }
@@ -6414,24 +6555,58 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
    Spacing: generous vertical breathing top+bottom when at top; tight when scrolled.
    ───────────────────────────────────────────────────────────── */
 .header.header-as    { min-height: 0; transition: min-height .25s ease, box-shadow .25s ease; }
-.header-as-row {
-  /* Crystorama-inspired: social LEFT · logo CENTER · actions RIGHT · nav row underneath.
-     The outer columns are 1fr so the middle "auto" (logo) sits at true page-center. */
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-areas:
-    "social  logo    actions"
-    "nav     nav     nav";
+/* Client rev (Ralph): utility bar sits ABOVE the main header — social on left,
+   Sign In / Order History / Favorites on right. Keeps the main header uncluttered. */
+.header-utility {
+  background: #fdfaf3;
+  border-bottom: 1px solid var(--c-line, #e5dfd5);
+  font-size: 12px;
+}
+.header-utility__row {
+  display: flex;
   align-items: center;
-  row-gap: 0;                                       /* tighten row spacing — nav row owns its own top gap via margin-top */
+  justify-content: space-between;
+  padding: 6px 32px;
+  min-height: 40px;
+}
+.header-utility__links { display: inline-flex; align-items: center; gap: 16px; }
+.header-utility .header-as-social { display: inline-flex; gap: 8px; }
+.header-utility .header-as-social .social-btn {
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  color: var(--c-ink-soft, #4a4547);
+  transition: color .18s ease, border-color .18s ease;
+}
+.header-utility .header-as-social .social-btn:hover { color: var(--c-primary); border-color: var(--c-primary); }
+.header-utility .header-as-social .social-btn svg { width: 13px; height: 13px; }
+@media (max-width: 760px) {
+  .header-utility__row { padding: 4px 16px; }
+  .header-utility .header-text-link { font-size: 11px; padding: 4px 6px; }
+}
+
+/* Main header — TWO ROWS:
+   Row 1: logo LEFT · actions RIGHT (Shop on Faire + Search + Cart)
+   Row 2: nav CENTERED (spans both columns)
+   This gives the 8-item nav its own dedicated horizontal band so it never collides
+   with the actions cluster. */
+.header-as-row {
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "logo actions"
+    "nav  nav";
+  align-items: center;
+  row-gap: 10px;
   column-gap: 24px;
-  padding: 8px 32px 0;                              /* client rev: tightened top padding (was 22px) so header sits close to viewport edge */
+  padding: 16px 32px 10px;
   min-height: 0;
   transition: padding .25s ease, min-height .25s ease;
 }
-.header-as-social           { grid-area: social;  justify-self: start; align-self: center; display: inline-flex; gap: 10px; }
-.header-as .brand-link      { grid-area: logo;    justify-self: center; }
-.header-as-actions          { grid-area: actions; justify-self: end;   align-self: center; margin-top: 0; }
-.nav-primary.nav-as         { grid-area: nav;     justify-self: center; margin-top: 0; padding-bottom: 6px; }
+.header-as-social           { display: none; }   /* social lives in the utility bar now */
+.header-as .brand-link      { grid-area: logo;    justify-self: start; }
+.header-as-actions          { grid-area: actions; justify-self: end;   align-self: center; margin-top: 0; min-width: 0; flex-wrap: nowrap; }
+.nav-primary.nav-as         { grid-area: nav;     justify-self: center; margin-top: 0; padding-bottom: 4px; padding-top: 4px; border-top: 1px solid var(--c-line, #e5dfd5); width: 100%; display: flex; justify-content: center; }
 
 /* Social pill icons — circular outlined buttons like the reference */
 .header-as-social .social-btn {
@@ -6455,71 +6630,137 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 }
 .nav-primary.nav-as a.is-active { color: var(--c-ink); }
 
-/* Logo — slightly larger since it's now the dominant page-centered mark */
-.header-as .brand-logo { height: 116px; max-width: 340px; }
+/* Logo — full size, anchored left per client rev. */
+.header-as .brand-logo { height: 118px; max-width: 360px; }
+@media (max-width: 1100px) { .header-as .brand-logo { height: 92px; max-width: 260px; } }
+@media (max-width: 760px)  { .header-as .brand-logo { height: 68px; max-width: 200px; } }
 
-/* Tablet — same stacked shape, tighter padding, hide YouTube to save room */
+/* Tablet — same 2-row stacked shape, tighter padding */
 @media (max-width: 1100px) {
   .header-as-row {
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas:
-      "social  logo    actions"
-      "nav     nav     nav";
-    padding: 6px 24px 0;
+      "logo actions"
+      "nav  nav";
+    padding: 12px 24px 8px;
     column-gap: 16px;
   }
   .header-as .brand-logo { height: 96px; max-width: 280px; }
-  .nav-primary.nav-as a  { font-size: 12px; letter-spacing: .12em; padding: 6px 10px 8px; }
+  .nav-primary.nav-as a  { font-size: 12px; letter-spacing: .1em; padding: 6px 8px 8px; }
 }
 
-/* Mobile — nav is hidden (drawer takes over); social also hides to save room; logo + actions only */
+/* Mobile — single row: logo + cart + hamburger only. Nav lives in the drawer. */
 @media (max-width: 760px) {
   .header-as-row {
-    grid-template-columns: 1fr auto;
-    grid-template-areas: "logo actions";
-    padding: 12px 16px;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "logo . actions";
+    padding: 10px 16px;
     row-gap: 0;
+    column-gap: 8px;
   }
+  .nav-primary.nav-as    { display: none; }   /* hidden on mobile, drawer covers it */
   .header-as-social      { display: none; }
-  .header-as .brand-link { justify-self: center; }
+  .header-as .brand-link { justify-self: start; }
   .header-as-actions     { justify-self: end; align-self: center; }
-  .header-as .brand-logo { height: 68px; max-width: 200px; }
+  .header-as .brand-logo { height: 56px; max-width: 180px; }
 }
 
-/* SCROLLED — revert to compact single-row: logo LEFT · nav CENTER · actions RIGHT
-   (Social cluster hides to keep the compact bar tight; it reappears when returning to the top.) */
-.header-wrap.is-scrolled .header.header-as { min-height: 76px; }
+/* Global .hide-mobile utility — anything with this class disappears ≤760px */
+@media (max-width: 760px) { .hide-mobile { display: none !important; } }
+
+/* Drawer account sub-list — smaller/lighter than the primary drawer nav */
+.drawer-list--account { border-top: 1px solid var(--c-line, #e5dfd5); margin-top: 8px; padding-top: 8px; }
+.drawer-list--account a { font-size: 15px !important; opacity: .85; }
+
+/* ============================================================================
+   RESPONSIVE POLISH (client rev): tighten hero, promo strip, sections, and
+   featured carousel for tablet and mobile so nothing overflows.
+   ============================================================================ */
+@media (max-width: 1100px) {
+  /* Hero: shorter aspect on tablet so the copy stays readable */
+  .hero-full { aspect-ratio: 2 / 1; min-height: 480px; }
+  .hero-edit__title    { font-size: clamp(20px, 3vw, 28px); }
+  .hero-edit__subtitle { font-size: clamp(16px, 2vw, 20px); }
+  .hero-edit__bullets li { font-size: 13.5px; }
+  /* Full-catalog rail: 3 per row on tablet */
+  #seasonalRail.cat-rail { grid-template-columns: repeat(3, 1fr); gap: 20px 16px; }
+  /* Section head slightly tighter */
+  .section-head h2 { font-size: clamp(24px, 3.5vw, 34px); }
+  /* Faire section grid collapses earlier for readability */
+  .faire-section__grid { grid-template-columns: 1fr; gap: 32px; }
+  /* QR block: text + code stack */
+  .faire-qr-block { grid-template-columns: 1fr; text-align: center; padding: 24px; gap: 20px; justify-items: center; }
+  .faire-qr-block__text { align-items: center; }
+}
+@media (max-width: 760px) {
+  /* Hero: portrait aspect on phones so the model is fully visible */
+  .hero-full { aspect-ratio: 4 / 5; min-height: 420px; }
+  .hero-full__copy-wrap { padding: 20px; }
+  .hero-edit__title    { font-size: 22px; }
+  .hero-edit__subtitle { font-size: 15px; }
+  .hero-edit__bullets  { gap: 2px; }
+  .hero-edit__bullets li { font-size: 12.5px; padding-left: 14px; }
+  /* Hero action strip: stack CTAs full-width so they're tap-friendly */
+  .hero-actions { padding: 14px 0 8px; }
+  .hero-actions__wrap { flex-direction: column; gap: 10px; }
+  .hero-actions .btn  { width: 100%; }
+  /* Promo strip wraps + shows only the number on mobile */
+  .promo-strip { flex-wrap: wrap; padding: 8px 12px; gap: 6px 14px; min-height: 0; justify-content: center; }
+  .promo-strip__msg strong { font-size: 12px; }
+  .promo-strip__phone { border-left: none; padding-left: 0; }
+  /* Reviews block: image on top, copy below */
+  .reviews-block__grid { grid-template-columns: 1fr; gap: 24px; }
+  .reviews-block__figure { aspect-ratio: 16/10; }
+  .reviews-block__title  { font-size: clamp(22px, 5vw, 28px); }
+  /* Faire section: mobile-first single column */
+  .faire-section__title { font-size: clamp(24px, 5vw, 30px); }
+  .faire-list__item { padding: 16px 18px; gap: 14px; }
+  .faire-list__title { font-size: 14px; }
+  .faire-list__desc { font-size: 13px; }
+  /* QR block */
+  .faire-qr-block__url { font-size: 22px; }
+  .faire-qr-block__qr img { width: 130px; height: 130px; }
+  /* Featured carousel arrows hidden (swipe replaces them) — already set above */
+  .featured-card__name { font-size: 14px; }
+  .featured-card__body { padding: 12px 14px 14px; }
+  /* Full Catalog rail on mobile: 2 columns tighter */
+  #seasonalRail.cat-rail { grid-template-columns: repeat(2, 1fr); gap: 14px 10px; }
+  /* Signature Collections rail: 2 cols on mobile */
+  .seasonal-picks .cat-rail { grid-template-columns: repeat(2, 1fr); gap: 16px 12px; }
+  .cat-tile__tag { font-size: 13px; margin-top: 8px; }
+}
+
+/* SCROLLED — keep the same TWO-ROW structure (logo + actions on top, nav below).
+   Just shrink the logo, tighten padding, and hide the utility bar to save vertical room.
+   This prevents "Contact Us" from colliding with "Shop on Faire" as it did in single-row. */
+.header-wrap.is-scrolled .header.header-as { min-height: 0; }
+.header-wrap.is-scrolled .header-utility { display: none; }               /* utility bar hides when scrolled */
 .header-wrap.is-scrolled .header-as-row {
-  grid-template-columns: minmax(180px, 240px) 1fr auto;
-  grid-template-areas: "logo nav actions";
-  padding: 10px 32px;
-  min-height: 76px;
-  row-gap: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "logo actions"
+    "nav  nav";
+  padding: 8px 32px 6px;
+  row-gap: 6px;
   column-gap: 20px;
 }
 .header-wrap.is-scrolled .header-as-social       { display: none; }
 .header-wrap.is-scrolled .header-as .brand-link  { justify-self: start; }
-.header-wrap.is-scrolled .header-as-actions      { align-self: center; margin-top: 0; }
-.header-wrap.is-scrolled .nav-primary.nav-as     { margin-top: 0; padding-bottom: 0; }
-.header-wrap.is-scrolled .nav-primary.nav-as a   { text-transform: none; letter-spacing: 0; font-size: 13.5px; padding: 8px 10px; }
-.header-wrap.is-scrolled .nav-primary.nav-as a.is-active::after { display: none; }
-.header-wrap.is-scrolled .header-as .brand-logo  { height: 56px !important; }
+.header-wrap.is-scrolled .header-as-actions      { justify-self: end; align-self: center; margin-top: 0; }
+.header-wrap.is-scrolled .nav-primary.nav-as     { margin-top: 0; padding-top: 4px; padding-bottom: 2px; }
+.header-wrap.is-scrolled .nav-primary.nav-as a   { font-size: 12px; padding: 4px 8px !important; }
+.header-wrap.is-scrolled .header-as .brand-logo  { height: 56px !important; max-width: 220px; }
 
 @media (max-width: 1100px) {
-  .header-wrap.is-scrolled .header-as-row {
-    grid-template-columns: minmax(160px, 220px) 1fr auto;
-    padding: 8px 20px;
-    min-height: 64px;
-  }
-  .header-wrap.is-scrolled .header.header-as { min-height: 64px; }
-  .header-wrap.is-scrolled .header-as .brand-logo { height: 48px !important; }
+  .header-wrap.is-scrolled .header-as-row { padding: 6px 20px 6px; }
+  .header-wrap.is-scrolled .header-as .brand-logo { height: 48px !important; max-width: 180px; }
+  .header-wrap.is-scrolled .nav-primary.nav-as a   { font-size: 11.5px; padding: 4px 6px !important; }
 }
 @media (max-width: 760px) {
   .header-wrap.is-scrolled .header-as-row {
     grid-template-columns: 1fr auto;
     grid-template-areas: "logo actions";
     padding: 8px 16px;
-    min-height: 56px;
   }
   .header-wrap.is-scrolled .header-as .brand-link { justify-self: start; }
   .header-wrap.is-scrolled .header-as .brand-logo { height: 44px !important; }
@@ -6678,6 +6919,102 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
    Multi-slide auto-advancing carousel with dots. Same visual treatment as the
    single-banner variant but with a horizontal track and slide indicators.
    ============================================================================ */
+/* ============================================================================
+   FEATURED PRODUCTS CAROUSEL (Ralph rev): horizontal scrollable rail, 4 products
+   visible per view, 32 total. Native scroll-snap on rail, click arrows to page.
+   ============================================================================ */
+.featured-carousel__wrap {
+  position: relative;
+  margin-top: 24px;
+}
+.featured-carousel__rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - (3 * 20px)) / 4);   /* exactly 4 tiles visible, 20px gap */
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 4px 4px 20px;
+  scrollbar-width: none;                             /* Firefox hide scrollbar */
+}
+.featured-carousel__rail::-webkit-scrollbar { display: none; }  /* WebKit hide */
+.featured-carousel__rail > .featured-card { scroll-snap-align: start; }
+.featured-card {
+  display: flex; flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--c-line, #e5dfd5);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--c-ink, #0f0e10);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  min-width: 0;
+}
+.featured-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(15,14,16,.10);
+  border-color: transparent;
+}
+.featured-card__img-wrap {
+  aspect-ratio: 4/5;
+  background: #f5efe4;
+  overflow: hidden;
+}
+.featured-card__img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+.featured-card:hover .featured-card__img-wrap img { transform: scale(1.05); }
+.featured-card__body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
+.featured-card__sku {
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--c-ink-soft, #4a4547);
+  font-weight: 500;
+}
+.featured-card__name {
+  font-family: var(--f-display, 'Fraunces', serif);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -.005em;
+  color: var(--c-ink, #0f0e10);
+  margin: 2px 0 6px;
+  /* Clamp to 2 lines for consistent card height */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.featured-card__meta {
+  font-size: 12px;
+  color: var(--c-ink-soft, #4a4547);
+  margin-top: auto;
+}
+.featured-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff;
+  color: var(--c-ink, #0f0e10);
+  border: 1px solid var(--c-line, #e5dfd5);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(15,14,16,.10);
+  transition: color .18s ease, border-color .18s ease, transform .15s ease;
+}
+.featured-carousel__arrow:hover  { color: var(--c-primary, #6E1B31); border-color: var(--c-primary, #6E1B31); }
+.featured-carousel__arrow:active { transform: translateY(-50%) scale(.94); }
+.featured-carousel__arrow--prev  { left: -12px; }
+.featured-carousel__arrow--next  { right: -12px; }
+@media (max-width: 1100px) {
+  .featured-carousel__rail { grid-auto-columns: calc((100% - (2 * 16px)) / 3); }   /* 3 per view on tablet */
+}
+@media (max-width: 760px) {
+  .featured-carousel__rail { grid-auto-columns: calc((100% - 12px) / 2); gap: 12px; padding-bottom: 12px; }  /* 2 per view on mobile */
+  .featured-carousel__arrow { display: none; }   /* swipe replaces arrows on touch */
+}
+
 .bestsellers-promo { padding: 32px 0; }
 .bestsellers-carousel {
   position: relative;
@@ -6934,31 +7271,22 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 
 <a class="skip" href="#main">Skip to main content</a>
 
-<!-- HEADER — AccuSharp-inspired layout (client rev): logo left · category nav center ·
-     Buy Now CTA + login + cart icons right · promo strip BELOW header (not above). -->
+<!-- HEADER (client rev — Ralph):
+     TOP ROW = utility strip (social icons on left · Sign In / Order History / Favorites on right)
+     MAIN ROW = logo LEFT · nav CENTER · search + Shop on Faire + cart RIGHT
+     Nothing overlaps: three clean horizontal bands. -->
 <div class="header-wrap">
 <div id="header-slot">
+  <!-- Client rev: utility bar removed. Social icons now live in the footer only. -->
+
   <header class="header header-as" role="banner">
     <div class="container header-as-row">
-      <!-- Client rev (Crystorama-style): social cluster on the LEFT · logo center · account/cart right -->
-      <div class="header-as-social" aria-label="Follow Magic Scarf on social">
-        <a href="https://www.facebook.com/magicscarf" class="social-btn" aria-label="Facebook" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9V14.9H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
-        </a>
-        <a href="https://www.instagram.com/magicscarf" class="social-btn" aria-label="Instagram" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-        </a>
-        <a href="https://www.youtube.com/channel/UCXLskc4sAfuppKmS-oJZ1Rw/" class="social-btn" aria-label="YouTube" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
-        </a>
-      </div>
-
       <a href="#/" class="brand-link" aria-label="Magic Scarf — home">
         <img class="brand-logo" src="https://magicscarf.wizcommerce.com/wp-content/uploads/2026/07/logo-removebg-preview.png" alt="Magic Scarf — wholesale women's fashion" onerror="this.onerror=null;this.src='https://www.magicscarf.com/stores/eol/assets/images/logo.png';this.addEventListener('error',()=>{this.style.display='none';this.nextElementSibling.style.display='inline'},{once:true})">
         <span class="brand-mark" style="display:none">Magic Scarf</span>
       </a>
 
-      <!-- Client rev: "Shop FAIRE Direct" nav item removed — the header CTA button covers this action. -->
+      <!-- Client rev (Ralph): Trade Shows added to the primary nav. -->
       <nav class="nav-primary nav-as" aria-label="Primary">
         <a href="#/"                       data-route="/">Home</a>
         <a href="#/catalog"                data-route="/catalog">Catalog</a>
@@ -6966,33 +7294,30 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
         <a href="#/c/best-picks"           data-route="/c/best-picks">Best Picks</a>
         <a href="#/c/coming-soon"          data-route="/c/coming-soon">Coming Soon</a>
         <a href="#/sale"                   data-route="/sale">Sale Items</a>
+        <a href="#/show-schedule"          data-route="/show-schedule">Trade Shows</a>
         <a href="#/contact"                data-route="/contact">Contact Us</a>
       </nav>
 
       <div class="header-actions header-as-actions">
-        <!-- Client rev: header CTA labeled "Shop on Faire", routes to /faire. -->
+        <!-- Client rev (Ralph): SEARCH BAR (was an icon-only button). Inline input that submits
+             to the search modal with the query pre-filled + focused. -->
+        <form class="header-search" role="search" onsubmit="event.preventDefault();var q=this.q.value.trim();var m=document.getElementById('searchModal');m.classList.add('is-open');var mi=m.querySelector('input[name=q]');if(mi){mi.value=q;setTimeout(()=>mi.focus(),40);}">
+          <svg class="header-search__icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="header-search__input" name="q" type="search" placeholder="Search" aria-label="Search the catalog" autocomplete="off">
+        </form>
+
+        <!-- Client rev (Ralph): text links in the same row as the search — Sign In · Order History · Favorites -->
+        <button class="header-text-link" id="accountBtn" type="button" onclick="openLogin()" aria-label="Sign in or create account">Sign In</button>
+        <a class="header-text-link hide-mobile" href="#/order-tracking">Order History</a>
+        <a class="header-text-link header-text-link--fav hide-mobile" href="#/account/favorites">Favorites <span class="badge" id="favBadge" style="display:none">0</span></a>
+
+        <!-- Client rev (Ralph): header CTA labeled "Shop on Faire", routes to /faire. -->
         <a class="btn btn-buy-now" href="#/faire" data-route="/faire" aria-label="Shop on Faire">Shop on Faire</a>
 
-        <!-- Login icon (AccuSharp: login_image_icon) -->
-        <button class="iconbtn login-icon" id="accountBtn" aria-label="Sign in" onclick="openLogin()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        </button>
-
-        <!-- Cart icon (AccuSharp: image_icon) -->
+        <!-- Cart stays as an icon — universally understood affordance. -->
         <a class="iconbtn cart-icon" href="#/cart" aria-label="View cart">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"></path></svg>
           <span class="badge" id="cartBadge">0</span>
-        </a>
-
-        <!-- Order History (client rev) — quick access to previous orders for returning buyers. -->
-        <a class="iconbtn history-btn hide-mobile" href="#/order-tracking" aria-label="Order history" title="Order history">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
-        </a>
-
-        <!-- Favorites (kept from prior rev — quick save-for-later access) -->
-        <a class="iconbtn favorites-btn hide-mobile" href="#/account/favorites" aria-label="My favorites" title="My favorites">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="badge" id="favBadge" style="display:none">0</span>
         </a>
 
         <button class="iconbtn menu-toggle" aria-label="Open menu" onclick="document.getElementById('drawer').classList.add('is-open')">
@@ -7009,9 +7334,10 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
           <span class="promo-strip__sep" aria-hidden="true">·</span>
           <strong>Half Price Shipping on All Orders</strong>
         </span>
-        <a class="promo-strip__phone" href="tel:1-866-546-6256" aria-label="Call toll free 1-866-546-6256">
+        <a class="promo-strip__phone" href="tel:1-866-546-6256" aria-label="Call toll free 1-866-546-6256 for phone orders or quick questions">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <span>1-866-546-6256</span>
+          <span class="promo-strip__phone-label">Phone Orders / Quick Questions</span>
+          <strong class="promo-strip__phone-num">1-866-546-6256</strong>
         </a>
       </div>
     </div>
@@ -7031,6 +7357,8 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
+    <!-- Mobile drawer: full nav + account links + call CTA. Everything hidden from the mobile
+         header collapses into here so nothing is inaccessible on touch. -->
     <nav class="drawer-list" aria-label="Mobile primary">
       <a href="#/" onclick="closeDrawer()">Home</a>
       <a href="#/catalog" onclick="closeDrawer()">Catalog</a>
@@ -7038,15 +7366,18 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
       <a href="#/c/best-picks" onclick="closeDrawer()">Best Picks</a>
       <a href="#/c/coming-soon" onclick="closeDrawer()">Coming Soon</a>
       <a href="#/sale" onclick="closeDrawer()">Sale Items</a>
+      <a href="#/show-schedule" onclick="closeDrawer()">Trade Shows</a>
       <a href="#/contact" onclick="closeDrawer()">Contact Us</a>
+    </nav>
+    <nav class="drawer-list drawer-list--account" aria-label="Account">
+      <a href="#" onclick="event.preventDefault();closeDrawer();openLogin();">Sign In</a>
+      <a href="#/order-tracking" onclick="closeDrawer()">Order History</a>
+      <a href="#/account/favorites" onclick="closeDrawer()">Favorites</a>
       <a href="#/cart" onclick="closeDrawer()">View Cart</a>
-      <a href="#/account/favorites" onclick="closeDrawer()">My Favorites</a>
     </nav>
     <div class="drawer-foot">
-      <!-- Client rev: header CTA labeled "Shop on Faire", routes to /faire. -->
       <a href="#/faire" class="btn btn-primary btn-block" onclick="closeDrawer()">Shop on Faire</a>
-      <button class="btn btn-outline btn-block" onclick="closeDrawer();openLogin()" style="margin-top:10px">Sign In</button>
-      <a href="tel:1-866-546-6256" class="btn btn-ghost btn-block" style="margin-top:10px">Call 1-866-546-6256</a>
+      <a href="tel:1-866-546-6256" class="btn btn-outline btn-block" style="margin-top:10px">Call 1-866-546-6256</a>
     </div>
   </div>
 </div>
@@ -7067,21 +7398,15 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
     <!-- Hero copy block: per-slide editorial (title + optional subtitle + bullets) lives on the LEFT
          side of the frame, above two persistent CTAs — "Apply for Wholesale" (primary) and
          "Shop the Look" (secondary, deep-links to the matching collection per slide). -->
+    <!-- Client rev (Ralph): CTA buttons removed from the hero image overlay.
+         The image + editorial copy stand on their own; CTAs live in the header
+         and in a compact strip beneath the hero. -->
     <div class="container hero-full__copy-wrap">
       <div class="hero-full__copy hero-full__copy--editorial">
         <div class="hero-edit" id="heroEdit">
           <h2 class="hero-edit__title"    id="heroEditTitle">A Poncho for All Seasons</h2>
           <p  class="hero-edit__subtitle" id="heroEditSubtitle" hidden></p>
           <ul class="hero-edit__bullets"  id="heroEditBullets"></ul>
-        </div>
-        <div class="hero-edit-cta">
-          <button class="btn btn-primary btn-icon-r" onclick="openRegister()">Apply for Wholesale
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
-          <a id="heroViewCta" href="#/catalog" class="btn btn-ghost btn-icon-r">
-            <span id="heroViewLabel">Shop the Look</span>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
         </div>
       </div>
     </div>
@@ -7099,6 +7424,21 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
 
     <span class="hero-full__caption" id="heroCaption">The Cashmere-Feel Poncho — 47 colorways</span>
     <ol class="hero-full__dots" id="heroDots" role="tablist" aria-label="Slide indicators"></ol>
+  </section>
+
+  <!-- Client rev (Ralph): CTAs moved OFF the hero image into a slim action bar directly below.
+       "Apply for Wholesale" opens the register modal; "Shop this Look" deep-links to the
+       category matching the currently-visible hero slide (updated by hero JS on each slide). -->
+  <section class="hero-actions">
+    <div class="container hero-actions__wrap">
+      <button class="btn btn-primary btn-icon-r" type="button" onclick="openRegister()">Apply for Wholesale
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+      <a id="heroViewCta" href="#/catalog" class="btn btn-outline btn-icon-r">
+        <span id="heroViewLabel">Shop this Look</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
   </section>
 
   <!-- Client rev: TRUST STRIP section (20+ · 12,000+ · 1,343 · Tuesday) removed from home per feedback. -->
@@ -7122,13 +7462,26 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
     </div>
   </section>
 
-  <!-- 3. BEST SELLERS SLIDING CAROUSEL — wrapped in .container so left/right gutters
-       align with every other section on the page. -->
-  <section class="section section-tight bestsellers-promo reveal" aria-label="This week's best sellers" aria-roledescription="carousel">
+  <!-- 3. FEATURED PRODUCTS CAROUSEL (Ralph rev): 32 SKUs in a horizontal scrollable
+       rail — 4 products visible at a time. Left/right arrows page through 8 groups.
+       Native scroll-snap so drag/swipe on touch feels right. -->
+  <section class="section section-tight featured-carousel reveal" aria-label="Featured products">
     <div class="container">
-      <div class="bestsellers-carousel" id="bestSellersCarousel">
-        <ul class="bestsellers-carousel__track" id="bestSellersTrack"></ul>
-        <ol class="bestsellers-carousel__dots" id="bestSellersDots" role="tablist" aria-label="Best sellers slide indicators"></ol>
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Featured Products</span>
+        <h2>This Week's Best Sellers</h2>
+        <p class="editor-note" style="font-family:var(--ff-display); font-style:italic; color:var(--c-ink-soft); font-size: 1.0625rem; margin: 8px auto 0; max-width: 640px;">Retailer favorites, restocked and ready to ship — 32 hand-picked SKUs, scroll to browse.</p>
+      </div>
+      <div class="featured-carousel__wrap">
+        <button type="button" class="featured-carousel__arrow featured-carousel__arrow--prev" aria-label="Scroll featured products left" onclick="featuredCarouselScroll(-1)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="featured-carousel__rail" id="featuredCarouselRail" role="region" aria-label="Featured products — scroll horizontally">
+          <!-- Populated at runtime by renderFeaturedCarousel() -->
+        </div>
+        <button type="button" class="featured-carousel__arrow featured-carousel__arrow--next" aria-label="Scroll featured products right" onclick="featuredCarouselScroll(1)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
     </div>
   </section>
@@ -7142,7 +7495,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
           <img src="https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1281.main.jpg" alt="Magic Scarf editorial — two friends styling shawls in California autumn light" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://com-magicscarf-web.s3.amazonaws.com/rotators/rotate_1290.main.jpg'">
         </figure>
         <div class="reviews-block__copy">
-          <span class="reviews-block__eyebrow">Designed in California · Since 2003</span>
+          <span class="reviews-block__eyebrow">Designed Worldwide · Since 2003</span>
           <h2 class="reviews-block__title">Built for the way wholesale actually works.</h2>
           <p class="reviews-block__lead">Half-price shipping. 50% Net-30 terms for approved retailers, and a warehouse that ships in 24 hours. We answer the phone. We restock weekly. We're the wholesale partner you'd build a boutique around.</p>
           <p class="reviews-block__signature">— The Magic Scarf Team</p>
@@ -7246,59 +7599,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
     </div>
   </section>
 
-  <!-- 7. NEWSLETTER — Client rev: cleaner split-card design (image left, form right). -->
-  <section class="section newsletter-v2 reveal">
-    <div class="container">
-      <div class="newsletter-v2__card">
-        <!-- LEFT: brand-palette gradient panel (no image) with the brand mark centered.
-             Client rev: replaced the editorial photo with a burgundy → gold → cream gradient
-             so the newsletter side reads as a distinct visual block rather than duplicating
-             photography used elsewhere on the page. -->
-        <div class="newsletter-v2__figure newsletter-v2__figure--gradient">
-          <div class="newsletter-v2__figure-mark" aria-hidden="true">
-            <span class="newsletter-v2__figure-eyebrow">Magic Scarf</span>
-            <span class="newsletter-v2__figure-mark-line">Newsletter</span>
-            <span class="newsletter-v2__figure-note">A weekly editorial mailer for wholesale buyers.</span>
-          </div>
-        </div>
-
-        <!-- RIGHT: form + copy -->
-        <div class="newsletter-v2__form-wrap">
-          <span class="newsletter-v2__eyebrow">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            Subscribe · Trade only
-          </span>
-          <h2 class="newsletter-v2__title">Join our <em>Newsletter</em>.</h2>
-          <p class="newsletter-v2__lead">One short email each Tuesday — new arrivals, restocked colors, and upcoming trade-show dates.</p>
-
-          <form class="newsletter-v2__form"
-                action="https://visitor2.constantcontact.com/api/signup"
-                method="POST"
-                target="_blank"
-                onsubmit="return handleNewsletterSubmit(this, event)">
-            <input type="hidden" name="ca"       value="CC_ACCOUNT_ID">
-            <input type="hidden" name="list"     value="CC_LIST_ID">
-            <input type="hidden" name="source"   value="magicscarf-signup-band">
-            <input type="hidden" name="required" value="ea">
-            <div class="newsletter-v2__field">
-              <input id="newsletter-email" name="ea" type="email" placeholder="boutique@example.com" autocomplete="email" required inputmode="email">
-            </div>
-            <button type="submit" class="newsletter-v2__submit">Subscribe
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
-          </form>
-
-          <div class="newsletter-v2__perks" role="list">
-            <span role="listitem"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Weekly</span>
-            <span role="listitem"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> No spam</span>
-            <span role="listitem"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Unsubscribe anytime</span>
-          </div>
-
-          <p class="newsletter-v2__fine" id="newsletterMsg">By signing up you agree to our <a href="#/privacy-policy">Privacy Policy</a>.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Client rev: NEWSLETTER section fully removed from the home page per feedback. -->
 
 </section>
 
@@ -7998,15 +8299,18 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <span class="brand-mark">Magic Scarf</span>
-        <p>Wholesale women's fashion since 2003. Scarves, shawls, ponchos and accessories — designed in California, trusted in boutiques nationwide.</p>
+        <a href="#/" class="footer-brand__link" aria-label="Magic Scarf — home">
+          <img class="footer-brand__logo" src="https://magicscarf.wizcommerce.com/wp-content/uploads/2026/07/logo-removebg-preview.png" alt="Magic Scarf — wholesale women's fashion" onerror="this.onerror=null;this.src='https://www.magicscarf.com/stores/eol/assets/images/logo.png';">
+        </a>
+        <p>Wholesale women's fashion since 2003. Scarves, shawls, ponchos and accessories — designed worldwide, trusted in boutiques everywhere.</p>
         <a href="tel:1-866-546-6256" class="footer-call">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           1-866-546-6256
         </a>
         <div class="footer-social">
-          <a href="https://www.facebook.com/magicscarf" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9V14.9H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></a>
-          <a href="https://www.youtube.com/channel/UCXLskc4sAfuppKmS-oJZ1Rw/" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg></a>
+          <a href="https://www.facebook.com/magicscarf" aria-label="Facebook" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9V14.9H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></a>
+          <a href="https://www.instagram.com/magicscarf" aria-label="Instagram" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.youtube.com/channel/UCXLskc4sAfuppKmS-oJZ1Rw/" aria-label="YouTube" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg></a>
         </div>
       </div>
 
@@ -8035,28 +8339,7 @@ em, h1 em, h2 em { color: var(--c-primary); font-style: italic; font-weight: 400
         </ul>
       </div>
 
-      <!-- Client rev: Newsletter wired to Constant Contact. Replace CC_ACCOUNT_ID + CC_LIST_ID with real values.
-           Submits to Constant Contact's SignUpAction endpoint — POST fields match their embedded-form spec. -->
-      <div class="footer-col footer-news">
-        <h5>Newsletter</h5>
-        <p>One short email each Tuesday with the week's restocks, new colors, and trade-show dates. Trade only.</p>
-        <form class="footer-news-form"
-              action="https://visitor2.constantcontact.com/api/signup"
-              method="POST"
-              target="_blank"
-              onsubmit="return handleNewsletterSubmit(this, event)">
-          <!-- Constant Contact hidden fields — set these once from client's CC dashboard -->
-          <input type="hidden" name="ca"        value="CC_ACCOUNT_ID">    <!-- Constant Contact account id -->
-          <input type="hidden" name="list"      value="CC_LIST_ID">       <!-- Newsletter list id -->
-          <input type="hidden" name="source"    value="magicscarf-footer">
-          <input type="hidden" name="required"  value="ea">
-          <input id="footer-news-email" name="ea" type="email" placeholder="boutique@example.com" aria-label="Email address" required autocomplete="email" inputmode="email">
-          <button type="submit" aria-label="Subscribe to the Newsletter">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
-        </form>
-        <small class="footer-news-fine" id="newsletterMsg">By signing up you agree to our Privacy Policy. Unsubscribe anytime.</small>
-      </div>
+      <!-- Client rev: Newsletter column fully removed from the footer per feedback. -->
     </div>
     <div class="footer-base">
       <div>© 2003–2026 Magic Scarf, LLC. All rights reserved. Powered by WizCommerce</div>
@@ -9313,7 +9596,7 @@ function renderPdp(sku) {
     ],
     'shawls-and-wraps': [
       'A travel-ready wrap in our signature drape. Pairs over evening dresses, business looks, and weekend layers — with the soft hand and generous size that makes Magic Scarf wraps a return purchase.',
-      'Designed in California. Available in our seasonal palette.'
+      'Designed worldwide. Available in our seasonal palette.'
     ],
     'tops-tees': [
       'A flattering, easy-wear top in our signature Magic Crush fabric. Wrinkle-resistant, packs flat, flatters every body — the boutique-favorite top in the Magic Scarf line.',
@@ -9468,7 +9751,7 @@ const INFO_PAGES = {
   '/security-disclaimers': { title: 'Security & Disclaimers',body: 'Site security, data handling and legal disclaimers. Full content migrated at launch.' },
   '/new-arrivals':         { title: 'New Arrivals',          body: 'Fresh SKUs added weekly. Sign in to view live inventory and color availability.' },
   '/coming-soon':          { title: 'Coming Soon',           body: 'Upcoming releases and pre-orders. Sign in to reserve cases ahead of the season.' },
-  '/about':                { title: 'About Magic Scarf',     body: 'Designed in California since 2003. Wholesale scarves, shawls, ponchos and accessories — trusted by 12,000+ boutiques nationwide. Half-price shipping on every order. A real person answers the phone.' },
+  '/about':                { title: 'About Magic Scarf',     body: 'Designed worldwide since 2003. Wholesale scarves, shawls, ponchos and accessories — trusted by 12,000+ boutiques everywhere. Half-price shipping on every order. A real person answers the phone.' },
   '/videos':               { title: 'Videos',                 body: 'Product walkthroughs, styling tips, and buyer education — filmed at our California studio. Visit our YouTube channel for the full library.' }
 };
 
@@ -10158,12 +10441,13 @@ const WC_CATEGORY_IMAGES = {
   'satin-gourmet-popcorn-shirts':          'https://cdn.wizcommerce.com/assets/4dac5e5e-4ae5-4c16-9811-f995b9e0de53.png'
 };
 
-// Signature Collections rail — one row of 4 real WC COLLECTIONS only (no categories).
+// Signature Collections rail — 4 real WC COLLECTIONS in Ralph's specified order.
+// Each has the tagline he provided in his review email.
 const HOME_COLLECTIONS = [
-  { name: 'Best Picks',     href: '#/c/best-picks',    img: 'https://cdn.wizcommerce.com/assets/7e256c23-c64f-4927-b935-ab58df48d8fd.jpg' },
-  { name: 'Discount Items', href: '#/sale',            img: 'https://cdn.wizcommerce.com/assets/beceab78-97d4-4c84-9a2e-b064d5a147d8.jpg' },
-  { name: 'New Arrivals',   href: '#/c/new-arrivals',  img: 'https://cdn.wizcommerce.com/assets/055100ad-6d34-45e5-ad8b-76f3c4fa396f.jpg' },
-  { name: 'Coming Soon',    href: '#/c/coming-soon',   img: 'https://cdn.wizcommerce.com/assets/81be2635-555d-479c-a734-8faa8d2e3453.jpg' }
+  { name: 'Best Picks',        href: '#/c/best-picks',   img: 'https://cdn.wizcommerce.com/assets/7e256c23-c64f-4927-b935-ab58df48d8fd.jpg', tag: 'Some items are the best for now' },
+  { name: 'New Arrivals',      href: '#/c/new-arrivals', img: 'https://cdn.wizcommerce.com/assets/055100ad-6d34-45e5-ad8b-76f3c4fa396f.jpg', tag: 'Some items are new or just restocked' },
+  { name: 'Coming Soon',       href: '#/c/coming-soon',  img: 'https://cdn.wizcommerce.com/assets/81be2635-555d-479c-a734-8faa8d2e3453.jpg', tag: 'Some items are coming' },
+  { name: 'Discounted Items',  href: '#/sale',           img: 'https://cdn.wizcommerce.com/assets/beceab78-97d4-4c84-9a2e-b064d5a147d8.jpg', tag: 'Some items are discounted to go' }
 ];
 
 function renderSeasonalPicks() {
@@ -10176,13 +10460,13 @@ function renderSeasonalPicks() {
   if (eye && cfg.eyebrow) eye.textContent = cfg.eyebrow;
   if (ttl && cfg.title)   ttl.textContent = cfg.title;
   if (not && cfg.note)    not.textContent = cfg.note;
-  // Client rev: hover-label + tile name removed since the image assets already carry the
-  // collection/category branding — no duplicate text below or on hover.
+  // Client rev: image + short italic tag underneath (Ralph's exact wording per collection).
   wrap.innerHTML = HOME_COLLECTIONS.map(c => `
-    <a href="${c.href}" class="cat-tile" aria-label="Shop ${c.name}">
+    <a href="${c.href}" class="cat-tile cat-tile--with-tag" aria-label="Shop ${c.name} — ${c.tag}">
       <div class="cat-tile-img">
         <img src="${c.img}" alt="${c.name} — Magic Scarf collection" loading="lazy" decoding="async">
       </div>
+      <span class="cat-tile__tag">${c.tag}</span>
     </a>`).join('');
 }
 
@@ -10288,74 +10572,42 @@ function _installFullCatalog() {
   NEW.forEach(c => CATALOG.push(c));
 }
 
-// Client rev: Best Sellers sliding carousel — auto-advances every 6 seconds
-// through 4 promotional slides. Client will supply real hero imagery later;
-// for now each slide uses a hand-tuned multi-stop gradient tied to the brand palette.
-const BEST_SELLERS_SLIDES = [
-  { bg: 'linear-gradient(135deg, #6E1B31 0%, #A8895A 45%, #EEDFC8 100%)',
-    eyebrow: "This Week's Best Sellers", title: 'Signature <em>Cover-ups</em>',
-    note: 'Retailer favorites, restocked and ready to ship.',
-    badge: 'Up to 25% Off', cta: 'Click to View', href: '#/c/capes-coverups-and-vests' },
-  { bg: 'linear-gradient(120deg, #4A1220 0%, #6E1B31 40%, #C79D6E 100%)',
-    eyebrow: 'Now Shipping', title: 'Ponchos for <em>Autumn & Winter</em>',
-    note: 'The signature Magic Scarf silhouette — 47 colorways in stock.',
-    badge: 'Best Sellers', cta: 'Shop Ponchos', href: '#/c/ponchos' },
-  { bg: 'linear-gradient(135deg, #3E4A38 0%, #7B8F6B 50%, #E6DDC3 100%)',
-    eyebrow: 'Fresh Drop', title: 'New Arrivals <em>FW 2026</em>',
-    note: 'This season\'s new prints, weights, and silhouettes — hand-picked for boutiques.',
-    badge: 'Just In', cta: 'Shop New Arrivals', href: '#/c/new-arrivals' },
-  { bg: 'linear-gradient(120deg, #A8895A 0%, #D4B98C 45%, #F3E9D3 100%)',
-    eyebrow: 'Buyer Favorite', title: 'Button-Style <em>Scarves & Shawls</em>',
-    note: 'The wearable accessory your customers reorder every season.',
-    badge: 'Reordered Weekly', cta: 'Shop the Style', href: '#/c/button-style-scarves-shawls' }
-];
-window.__bsIdx  = 0;
-window.__bsAuto = null;
-function renderBestSellers() {
-  const track = document.getElementById('bestSellersTrack');
-  const dots  = document.getElementById('bestSellersDots');
-  if (!track || !dots) return;
-  track.innerHTML = BEST_SELLERS_SLIDES.map((s, i) => `
-    <li role="group" aria-roledescription="slide" aria-label="Slide ${i+1} of ${BEST_SELLERS_SLIDES.length}" id="bsSlide-${i}">
-      <a href="${s.href}" class="bestsellers-promo__banner" aria-label="${s.cta} — ${s.title.replace(/<[^>]*>/g,'')}">
-        <div class="bestsellers-promo__bg" style="background: ${s.bg}" aria-hidden="true"></div>
-        <div class="bestsellers-promo__overlay">
-          <span class="bestsellers-promo__eyebrow">${s.eyebrow}</span>
-          <h2 class="bestsellers-promo__title">${s.title}</h2>
-          <p class="bestsellers-promo__note">${s.note}</p>
-          <span class="bestsellers-promo__badge">${s.badge}</span>
-          <span class="bestsellers-promo__cta">${s.cta}
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </span>
+// Client rev (Ralph): Featured Products horizontal carousel — 32 SKUs, 4 visible per view.
+// Pulls from SAMPLE_PRODUCTS (real WC v2 catalog) and renders product cards inside a
+// scroll-snap rail. Left/right arrow buttons scroll one page (4 cards) at a time.
+function renderFeaturedCarousel() {
+  const rail = document.getElementById('featuredCarouselRail');
+  if (!rail || typeof SAMPLE_PRODUCTS === 'undefined' || !SAMPLE_PRODUCTS.length) return;
+  // Prefer products WITH real imagery; take the first 32.
+  const withImg  = SAMPLE_PRODUCTS.filter(p => p && p.img);
+  const source   = withImg.length >= 32 ? withImg : SAMPLE_PRODUCTS;
+  const featured = source.slice(0, 32);
+  const fallbackImg = 'https://www.magicscarf.com/stores/common_files/products/main_image_2450.jpg';
+  rail.innerHTML = featured.map((p, i) => {
+    const sku   = p.sku   || ('MS-' + (i+1)).padStart(6, '0');
+    const name  = (p.name || p.title || 'Magic Scarf SKU ' + sku).replace(/</g,'&lt;');
+    const img   = p.img   || fallbackImg;
+    const cat   = (p.cats && p.cats[0]) || (p.cat || 'Wholesale');
+    const href  = p.slug ? ('#/p/' + p.slug) : ('#/p/' + sku);
+    return `
+      <a href="${href}" class="featured-card" aria-label="View ${name}">
+        <div class="featured-card__img-wrap">
+          <img src="${img}" alt="${name}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${fallbackImg}'">
         </div>
-      </a>
-    </li>
-  `).join('');
-  dots.innerHTML = BEST_SELLERS_SLIDES.map((_, i) => `
-    <li role="tab" tabindex="0" aria-label="Go to slide ${i+1}" aria-controls="bsSlide-${i}"
-        aria-selected="${i===0?'true':'false'}" class="${i===0?'is-active':''}"
-        onclick="bsGoTo(${i})" onkeydown="if(event.key==='Enter')bsGoTo(${i})"></li>
-  `).join('');
-  bsGoTo(0);
-  bsStartAuto();
+        <div class="featured-card__body">
+          <span class="featured-card__sku">SKU ${sku}</span>
+          <span class="featured-card__name">${name}</span>
+          <span class="featured-card__meta">${cat}</span>
+        </div>
+      </a>`;
+  }).join('');
 }
-function bsGoTo(i) {
-  const total = BEST_SELLERS_SLIDES.length;
-  if (total === 0) return;
-  window.__bsIdx = (i + total) % total;
-  const track = document.getElementById('bestSellersTrack');
-  const dots  = document.getElementById('bestSellersDots');
-  if (track) track.style.transform = 'translate3d(' + (-100 * window.__bsIdx) + '%, 0, 0)';
-  if (dots) [...dots.children].forEach((li, idx) => {
-    const active = (idx === window.__bsIdx);
-    li.classList.toggle('is-active', active);
-    li.setAttribute('aria-selected', active ? 'true' : 'false');
-  });
-}
-function bsStartAuto() {
-  if (window.__bsAuto) clearInterval(window.__bsAuto);
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  window.__bsAuto = setInterval(() => bsGoTo(window.__bsIdx + 1), 6000);
+function featuredCarouselScroll(dir) {
+  const rail = document.getElementById('featuredCarouselRail');
+  if (!rail) return;
+  // Page = width of one visible view (~ 4 cards). Use rail's clientWidth for accurate paging.
+  const page = rail.clientWidth;
+  rail.scrollBy({ left: dir * page, behavior: 'smooth' });
 }
 
 function renderFeaturedItems() {
@@ -10495,7 +10747,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   renderSeasonalPicks();       // seasonal picks rail (4 collections)
   renderSeasonal();
-  renderBestSellers();         // Client rev: multi-slide best sellers carousel
+  renderFeaturedCarousel();    // Client rev (Ralph): 32-product horizontal carousel
   renderCatalogGrid('catalogGrid');
   renderCatalogGrid('catalogGrid2');
   renderShows('showsGrid', SHOWS);
